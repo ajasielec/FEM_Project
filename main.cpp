@@ -1,4 +1,5 @@
 #include "main.h"
+#include "Quadrature.h"
 
 
 // function that reads from desired file
@@ -86,7 +87,7 @@ int main() {
 
 	std::cout << std::fixed << std::setprecision(10);
 
-	std::cout << "Test 1 - 4x4 Grid:" << std::endl;
+	/*std::cout << "Test 1 - 4x4 Grid:" << std::endl;
 	// grid4x4.displayGlobalData();
 	grid4x4.displayNodes();
 	grid4x4.displayElements();
@@ -103,8 +104,31 @@ int main() {
 
 	std::cout << "\n\nTest 3 - 31x31 Grid:" << std::endl;
 	grid31x31.displayNodes();
-	grid31x31.displayElements();
+	grid31x31.displayElements();*/
 
+	std::cout << std::fixed << std::setprecision(5);
+
+	std::cout << "Integration using Gauss quadratures method." << std::endl;
+
+	// integral of f(x) = 5x^2 + 3x + 6
+	std::cout << "\nf(x) = 5x^2 + 3x + 6\n";
+	std::cout << "\tNodes nr:\tResult:\n";
+	auto f = [](double x) {return 5 * x * x + 3 * x + 6; };
+
+	for (int n = 1; n <= 4; n++) {
+		std::cout << "\t\t" << n << ": \t" << Quadrature(n).solveQuadratures(f) << std::endl;
+	}
+	std::cout << "\tAccurate result: " << 15.3333333333 << std::endl;
+
+	// integral of = 5x^2 + 3x + 6
+	std::cout << "\nf(x) = 5x^2y^2 + 3xy + 6\n";
+	std::cout << "\tNodes nr:\tResult:\n";
+	auto f_xy = [](double x, double y) {return 5 * x * x * y * y + 3 * x * y + 6; };
+
+	for (int n = 1; n <= 4; n++) {
+		std::cout << "\t\t" << n << ": \t" << Quadrature(n).solveQuadratures(f_xy) << std::endl;
+	}
+	std::cout << "\tAccurate result: " << 26.22222222222 << std::endl;
 
 	return 0;
 }

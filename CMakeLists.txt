@@ -4,4 +4,6 @@ project(FEM_Project)
 set(CMAKE_CXX_STANDARD 20)
 
 add_executable(FEM_Project main.cpp
-        main.h)
+        main.h
+        Quadrature.cpp
+        Quadrature.h)

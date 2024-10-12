@@ -1,5 +1,9 @@
 #include "main.h"
 #include "Quadrature.h"
+#include "grid.h"
+
+#include <fstream>
+#include <iostream>
 
 
 // function that reads from desired file
@@ -82,12 +86,15 @@ Grid readFromFile(const std::string& path) {
 
 
 int main() {
+
+	// LAB 1 - READING GRID FROM FILE //
+
 	// grid 1
 	Grid grid4x4 = readFromFile("grids\\Test1_4_4.txt");
 
 	std::cout << std::fixed << std::setprecision(10);
 
-	/*std::cout << "Test 1 - 4x4 Grid:" << std::endl;
+	std::cout << "Test 1 - 4x4 Grid:" << std::endl;
 	// grid4x4.displayGlobalData();
 	grid4x4.displayNodes();
 	grid4x4.displayElements();
@@ -104,11 +111,14 @@ int main() {
 
 	std::cout << "\n\nTest 3 - 31x31 Grid:" << std::endl;
 	grid31x31.displayNodes();
-	grid31x31.displayElements();*/
+	grid31x31.displayElements();
 
 	std::cout << std::fixed << std::setprecision(5);
 
-	std::cout << "Integration using Gauss quadratures method." << std::endl;
+
+	// LAB 2 - GAUSS QUADRATURES METHOD
+
+	std::cout << "\n\nIntegration using Gauss quadratures method." << std::endl;
 
 	// integral of f(x) = 5x^2 + 3x + 6
 	std::cout << "\nf(x) = 5x^2 + 3x + 6\n";

@@ -1,9 +1,6 @@
-//
-// Created by Ania on 09.10.2024.
-//
-
 #include "Quadrature.h"
 
+#include <cmath>
 #include <iostream>
 #include <ostream>
 
@@ -21,7 +18,7 @@ static const std::vector<std::vector<double>> predefined_wages = {
         {0.347855, 0.652145, 0.652145, 0.347855}  // for 4 nodes
 };
 
-Quadrature::Quadrature(int nodes_number) {
+Quadrature::Quadrature(const int nodes_number) {
     this->nodes_number = nodes_number;
         if (nodes_number < 1 || nodes_number > 4) {
                 std::cerr << "Invalid node number" << std::endl;

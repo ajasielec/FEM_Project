@@ -1,12 +1,7 @@
-//
-// Created by Ania on 09.10.2024.
-//
-
 #ifndef QUADRATURE_H
 #define QUADRATURE_H
-#include <vector>
-#include <cmath>
 
+#include <vector>
 
 class Quadrature {
     int nodes_number;
@@ -17,7 +12,6 @@ public:
     double solveQuadratures(double (*f)(double x)) const;
     double solveQuadratures(double (*f)(double x, double y)) const;
 };
-
 
 
 #endif //QUADRATURE_H

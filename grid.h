@@ -9,6 +9,7 @@
 struct Node {
     int id;
     double x, y;
+
     Node();
     Node(double x, double y);
     Node(int id, double x, double y);
@@ -17,7 +18,8 @@ struct Node {
 
 struct Element {
     int id;
-    int node_id [4];
+    int node_id [4]{};
+
     Element();
     Element (int id, const int node_id[4]);
     void display() const;
@@ -52,8 +54,10 @@ struct Jakobian {
     double detJ;
 
     // taking tables and nodes
-    Jakobian(ElemUniv e, Grid grid, int element_id, int row_id);
+    Jakobian();
     void displayJakobian();
+    void calculateJakobian(ElemUniv e, std::vector<Node> nodes, int row_id);
+    void calculateInverse();
 };
 
 std::vector<Jakobian> calculateJakobiansOfElement(int element_id, Grid grid, ElemUniv e);

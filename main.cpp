@@ -142,6 +142,7 @@ int main() {
 	// // std::cout << "\tAccurate result: " << 26.222222222222222222222222222222 << std::endl;
 
 	// LAB 3 - JAKOBIAN
+
 	// test element
 	// creating nodes
 	Node node1(1, 0, 0);
@@ -149,7 +150,7 @@ int main() {
 	Node node3(3, 0.025, 0.025);
 	Node node4(4, 0, 0.025);
 
-	// creating element
+	// creating	an element
 	int nodes_id[4] = {1,2,3,4};
 	Element element(1, nodes_id);
 
@@ -168,14 +169,48 @@ int main() {
 	mygrid.displayNodes();
 	mygrid.displayElements();
 
-
 	// completing tables
 	ElemUniv elem_univ(mygrid.npc);
 	elem_univ.display();
 
-	// creating jakobian
-	Jakobian jakobian(elem_univ, mygrid, 1, 0);
-	jakobian.displayJakobian();
+	// calculating jakobians for whole element
+	std::vector<Jakobian> jakobians = calculateJakobiansOfElement(1, mygrid, elem_univ);
+
+	std::cout << std::endl;
+	for (int i = 0; i < mygrid.npc; i++) {
+		std::cout << "\nJakobian in pc" << i+1 << ":" << std::endl;
+		jakobians[i].displayJakobian();
+	}
+
+	// // testing jakobian for grid from file
+	// // reading grid from file
+	// Grid grid4x4 = readFromFile("grids\\Test1_4_4.txt");
+	// grid4x4.npc = 4;
+	//
+	// std::cout << std::fixed << std::setprecision(10);
+	//
+	// // completing tables
+	// ElemUniv elem_univ(grid4x4.npc);
+	// elem_univ.display();
+	//
+	// // taking first element:
+	// Element element = grid4x4.elements[1];
+	//
+	// // calculating jakobians for whole element
+	// std::vector<Jakobian> jakobians = calculateJakobiansOfElement(1, grid4x4, elem_univ);
+	//
+	// std::cout << std::endl;
+	// for (int i = 0; i < grid4x4.npc; i++) {
+	// 	std::cout << "\nJakobian in pc" << i+1 << ":" << std::endl;
+	// 	jakobians[i].displayJakobian();
+	// }
+
+	// czy jakobian ma byc taki sam dla kazdego punktu w elemencie?
+
+
+
+
+
 
 
 	return 0;

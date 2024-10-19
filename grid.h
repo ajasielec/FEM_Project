@@ -34,6 +34,8 @@ struct Grid {
     void displayGlobalData() const;
     void displayNodes() const;
     void displayElements() const;
+    Element findElementById(int id);
+    Node findNodeById(int id);
 };
 
 struct ElemUniv {
@@ -45,9 +47,16 @@ struct ElemUniv {
 };
 
 struct Jakobian {
-    double J[4][4];
-    double J1[4][4];
+    double J[2][2];
+    double J1[2][2];
     double detJ;
+
+    // taking tables and nodes
+    Jakobian(ElemUniv e, Grid grid, int element_id, int row_id);
+    void displayJakobian();
 };
+
+std::vector<Jakobian> calculateJakobiansOfElement(int element_id, Grid grid, ElemUniv e);
+
 
 #endif //GRID_H

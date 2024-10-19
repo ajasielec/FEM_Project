@@ -62,6 +62,24 @@ void Grid::displayElements() const {
     }
 }
 
+Element Grid::findElementById(int id) {
+    for (const auto& element : elements) {
+        if (element.id == id) {
+            return element;
+        }
+    }
+    std::cout <<"Element with the given id does not exist";
+}
+
+Node Grid::findNodeById(int id) {
+    for (const auto& node : nodes) {
+        if (node.id == id) {
+            return node;
+        }
+    }
+    std::cout <<"Node with the given id does not exist";
+}
+
 // universal element
 ElemUniv::ElemUniv(int npc) {
 
@@ -105,3 +123,72 @@ void ElemUniv::display() const {
         std::cout << std::endl;
     }
 }
+
+// Jakobian JEST DLA JEDNEGO WIERSZA!
+Jakobian::Jakobian(ElemUniv e, Grid grid, int element_id, int row_id) {
+    // taking an element
+    const Element element = grid.findElementById(element_id);
+
+    // taking nodes of given element
+    std::vector<Node> nodes (4);
+    for (int i = 0; i < 4; i++) {
+        nodes[i] = grid.findNodeById(element.node_id[i]);
+        nodes[i].display();
+    }
+
+    // row of the tables
+    std::vector<double> const pc_E = e.dN_dE[row_id];
+    std::vector<double> const pc_n = e.dN_dn[row_id];
+
+    // elements of jakobian matrix
+    double dx_dE = 0;
+    double dy_dE = 0;
+    double dx_dn = 0;
+    double dy_dn = 0;
+
+    // calculating jakobian
+    for (int i = 0; i < 4; i++) {
+        dx_dE += pc_E[i] * nodes[i].x;
+        dy_dE += pc_E[i] * nodes[i].y;
+        dx_dn += pc_n[i] * nodes[i].x;
+        dy_dn += pc_n[i] * nodes[i].y;
+    }
+
+    J[0][0] = dx_dE;
+    J[0][1] = dy_dE;
+    J[1][0] = dx_dn;
+    J[1][1] = dy_dn;
+}
+
+void Jakobian::displayJakobian() {
+    std::cout << "Jakobian:" << std::endl;
+    for (int i = 0; i < 2; i++) {
+        std::cout << "[" << J[i][0] << ", " << J[i][1] << "]" << std::endl;
+    }
+}
+
+std::vector<Jakobian> calculateJakobiansOfElement(int element_id, Grid grid, ElemUniv e) {
+
+    std::vector<Jakobian> result;
+
+    // taking an element
+    const Element element = grid.findElementById(element_id);
+
+    // taking nodes of given element
+    std::vector<Node> nodes (4);
+    for (int i = 0; i < 4; i++) {
+        nodes[i] = grid.findNodeById(element.node_id[i]);
+        nodes[i].display();
+    }
+
+    //calculating jakobian
+    for (int i = 0; i < 4; i++) {
+       // Jakobian jakobian(e)
+      //  result[i] = jakobian;
+    }
+}
+
+
+
+
+

@@ -143,19 +143,17 @@ int main() {
 
 	// LAB 3 - JAKOBIAN
 	// test element
+	// creating nodes
 	Node node1(1, 0, 0);
 	Node node2(2, 0.025, 0);
 	Node node3(3, 0.025, 0.025);
 	Node node4(4, 0, 0.025);
+
+	// creating element
 	int nodes_id[4] = {1,2,3,4};
-
 	Element element(1, nodes_id);
-	element.display();
-	node1.display();
-	node2.display();
-	node3.display();
-	node4.display();
 
+	// completing a grid with nodes and element
 	Grid mygrid;
 	mygrid.elements.push_back(element);
 	mygrid.nodes.push_back(node1);
@@ -163,13 +161,21 @@ int main() {
 	mygrid.nodes.push_back(node3);
 	mygrid.nodes.push_back(node4);
 	mygrid.npc = 4;
+	mygrid.nodes_number = 4;
+	mygrid.elements_number = 1;
+
+	// displaying nodes and element
+	mygrid.displayNodes();
+	mygrid.displayElements();
 
 
-	// completing table
+	// completing tables
 	ElemUniv elem_univ(mygrid.npc);
 	elem_univ.display();
 
 	// creating jakobian
+	Jakobian jakobian(elem_univ, mygrid, 1, 0);
+	jakobian.displayJakobian();
 
 
 	return 0;

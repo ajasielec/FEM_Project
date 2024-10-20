@@ -1,10 +1,4 @@
 #include "main.h"
-#include "Quadrature.h"
-#include "grid.h"
-
-#include <fstream>
-#include <iostream>
-
 
 // function that reads from desired file
 Grid readFromFile(const std::string& path) {
@@ -80,9 +74,63 @@ Grid readFromFile(const std::string& path) {
 		}
 	}
 
+	// completing tables
+	grid.npc = 4;
+	ElemUniv elem_univ(grid.npc);
+	// elem_univ.display();
+
+	// assigning jakobian to all elements
+	for (int i = 0; i < grid.elements_number; i++) {
+		Jakobian result = calculateJakobian(i+1, grid, elem_univ);
+		grid.elements[i].jakobian = result;
+	}
 
 	return grid;
 }
+
+// function that can calculate all jakobians in one element
+std::vector<Jakobian> calculateJakobiansOfElement(int element_id, Grid grid, ElemUniv e) {
+
+	std::vector<Jakobian> result;
+
+	// taking an element
+	const Element element = grid.findElementById(element_id);
+
+	// taking nodes of given element
+	std::vector<Node> nodes (4);
+	for (int i = 0; i < 4; i++) {
+		nodes[i] = grid.findNodeById(element.node_id[i]);
+	}
+
+	//calculating jakobian for each npc
+	for (int i = 0; i < 4; i++) {
+		Jakobian jakobian;
+		jakobian.calculateJakobian(e, nodes, i);
+		jakobian.calculateInverse();
+		result.push_back(jakobian);
+	}
+
+	return result;
+}
+
+Jakobian calculateJakobian(int element_id, Grid grid, ElemUniv e) {
+	Jakobian result;
+
+	// taking an element
+	const Element element = grid.findElementById(element_id);
+
+	// taking nodes of given element
+	std::vector<Node> nodes (4);
+	for (int i = 0; i < 4; i++) {
+		nodes[i] = grid.findNodeById(element.node_id[i]);
+	}
+
+	// calculating Jakobian
+	result.calculateJakobian(e, nodes, 0);
+	result.calculateInverse();
+	return result;
+}
+
 
 
 int main() {
@@ -145,6 +193,7 @@ int main() {
 
 	// test element
 	// creating nodes
+	std::cout << "TESTING JAKOBIAN FOR ONE ELEMENT:" << std::endl;
 	Node node1(1, 0, 0);
 	Node node2(2, 0.025, 0);
 	Node node3(3, 0.025, 0.025);
@@ -182,35 +231,23 @@ int main() {
 		jakobians[i].displayJakobian();
 	}
 
-	// // testing jakobian for grid from file
-	// // reading grid from file
-	// Grid grid4x4 = readFromFile("grids\\Test1_4_4.txt");
-	// grid4x4.npc = 4;
-	//
-	// std::cout << std::fixed << std::setprecision(10);
-	//
-	// // completing tables
-	// ElemUniv elem_univ(grid4x4.npc);
-	// elem_univ.display();
-	//
-	// // taking first element:
-	// Element element = grid4x4.elements[1];
-	//
-	// // calculating jakobians for whole element
-	// std::vector<Jakobian> jakobians = calculateJakobiansOfElement(1, grid4x4, elem_univ);
-	//
-	// std::cout << std::endl;
-	// for (int i = 0; i < grid4x4.npc; i++) {
-	// 	std::cout << "\nJakobian in pc" << i+1 << ":" << std::endl;
-	// 	jakobians[i].displayJakobian();
-	// }
+	// testing jakobian for grid from file
+	// reading grid from file
+	std::cout << "\n\nJAKOBIAN TEST - grid 4x4:";
+	Grid grid4x4 = readFromFile("grids\\Test1_4_4.txt");
+
+	std::cout << std::fixed << std::setprecision(10);
+
+	//  displaying jakobians of each element
+	for (int i = 0; i < grid4x4.elements_number; i++) {
+		std::cout << "\n";
+		grid4x4.elements[i].display();
+		grid4x4.elements[i].jakobian.displayJakobian();
+	}
+
 
 	// czy jakobian ma byc taki sam dla kazdego punktu w elemencie?
-
-
-
-
-
+	// JAKOBIAN TAKI SAM W KAZDYM ELEMENCIE?
 
 
 	return 0;

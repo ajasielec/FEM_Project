@@ -1,9 +1,5 @@
 #include "Quadrature.h"
 
-#include <cmath>
-#include <iostream>
-#include <ostream>
-
 static const std::vector<std::vector<double>> predefined_points = {
         {0},  // for 1 node
         {-sqrt(3.0) / 3.0, sqrt(3.0) / 3.0},  // for 2 nodes

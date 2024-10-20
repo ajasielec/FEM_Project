@@ -1,30 +1,11 @@
 #ifndef GRID_H
 #define GRID_H
 
-#include <vector>
-#include <string>
-#include <map>
+#include "includes.h"
+#include "Element.h"
+#include "Node.h"
 
-// structures
-struct Node {
-    int id;
-    double x, y;
-
-    Node();
-    Node(double x, double y);
-    Node(int id, double x, double y);
-    void display() const;
-};
-
-struct Element {
-    int id;
-    int node_id [4]{};
-
-    Element();
-    Element (int id, const int node_id[4]);
-    void display() const;
-};
-
+// GRID structure
 struct Grid {
     int nodes_number;
     int elements_number;
@@ -38,29 +19,8 @@ struct Grid {
     void displayElements() const;
     Element findElementById(int id);
     Node findNodeById(int id);
+    void calculateJakobiansOfElements();
 };
-
-struct ElemUniv {
-    std::vector<std::vector<double>> dN_dE; // dla x
-    std::vector<std::vector<double>>  dN_dn; // dla y
-
-    explicit ElemUniv (int npc);
-    void display() const;
-};
-
-struct Jakobian {
-    double J[2][2];
-    double J1[2][2];
-    double detJ;
-
-    // taking tables and nodes
-    Jakobian();
-    void displayJakobian();
-    void calculateJakobian(ElemUniv e, std::vector<Node> nodes, int row_id);
-    void calculateInverse();
-};
-
-std::vector<Jakobian> calculateJakobiansOfElement(int element_id, Grid grid, ElemUniv e);
 
 
 #endif //GRID_H

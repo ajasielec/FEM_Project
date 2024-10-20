@@ -1,7 +1,7 @@
 #ifndef QUADRATURE_H
 #define QUADRATURE_H
 
-#include <vector>
+#include "includes.h"
 
 class Quadrature {
     int nodes_number;

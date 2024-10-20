@@ -8,4 +8,13 @@ add_executable(FEM_Project main.cpp
         Quadrature.cpp
         Quadrature.h
         grid.cpp
-        grid.h)
+        grid.h
+        Node.cpp
+        Node.h
+        Element.cpp
+        Element.h
+        ElemUniv.cpp
+        ElemUniv.h
+        Jakobian.cpp
+        Jakobian.h
+        includes.h)

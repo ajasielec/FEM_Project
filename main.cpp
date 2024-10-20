@@ -83,6 +83,7 @@ Grid readFromFile(const std::string& path) {
 	for (int i = 0; i < grid.elements_number; i++) {
 		Jakobian result = calculateJakobian(i+1, grid, elem_univ);
 		grid.elements[i].jakobian = result;
+		grid.elements[i].jakobians = calculateJakobiansOfElement(i+1, grid, elem_univ);
 	}
 
 	return grid;
@@ -244,6 +245,12 @@ int main() {
 		grid4x4.elements[i].display();
 		grid4x4.elements[i].jakobian.displayJakobian();
 	}
+
+	// jakobians for each node in 1 element
+	// for (int i = 0; i < grid4x4.nodes_number; i++) {
+	// 	std::cout << "\n";
+	// 	grid4x4.elements[i].jakobians[0].displayJakobian();
+	// }
 
 
 	// czy jakobian ma byc taki sam dla kazdego punktu w elemencie?

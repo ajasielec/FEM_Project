@@ -9,7 +9,4 @@
 // functions
 Grid readFromFile(const std::string& path);
 
-std::vector<Jakobian> calculateJakobiansOfElement(int element_id, Grid grid, ElemUniv e);
-
-Jakobian calculateJakobian(int element_id, Grid grid, ElemUniv e);
 

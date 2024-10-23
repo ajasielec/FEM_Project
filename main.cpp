@@ -74,65 +74,8 @@ Grid readFromFile(const std::string& path) {
 		}
 	}
 
-	// completing tables
-	grid.npc = 4;
-	ElemUniv elem_univ(grid.npc);
-	// elem_univ.display();
-
-	// assigning jakobian to all elements
-	for (int i = 0; i < grid.elements_number; i++) {
-		Jakobian result = calculateJakobian(i+1, grid, elem_univ);
-		grid.elements[i].jakobian = result;
-		grid.elements[i].jakobians = calculateJakobiansOfElement(i+1, grid, elem_univ);
-	}
-
 	return grid;
 }
-
-// function that can calculate all jakobians in one element
-std::vector<Jakobian> calculateJakobiansOfElement(int element_id, Grid grid, ElemUniv e) {
-
-	std::vector<Jakobian> result;
-
-	// taking an element
-	const Element element = grid.findElementById(element_id);
-
-	// taking nodes of given element
-	std::vector<Node> nodes (4);
-	for (int i = 0; i < 4; i++) {
-		nodes[i] = grid.findNodeById(element.node_id[i]);
-	}
-
-	//calculating jakobian for each npc
-	for (int i = 0; i < 4; i++) {
-		Jakobian jakobian;
-		jakobian.calculateJakobian(e, nodes, i);
-		jakobian.calculateInverse();
-		result.push_back(jakobian);
-	}
-
-	return result;
-}
-
-Jakobian calculateJakobian(int element_id, Grid grid, ElemUniv e) {
-	Jakobian result;
-
-	// taking an element
-	const Element element = grid.findElementById(element_id);
-
-	// taking nodes of given element
-	std::vector<Node> nodes (4);
-	for (int i = 0; i < 4; i++) {
-		nodes[i] = grid.findNodeById(element.node_id[i]);
-	}
-
-	// calculating Jakobian
-	result.calculateJakobian(e, nodes, 0);
-	result.calculateInverse();
-	return result;
-}
-
-
 
 int main() {
 
@@ -219,97 +162,49 @@ int main() {
 	mygrid.displayNodes();
 	mygrid.displayElements();
 
-	// completing tables
+	// completing tables and displaying them
 	ElemUniv elem_univ(mygrid.npc);
 	elem_univ.display();
 
-	// calculating jakobians for whole element
-	std::vector<Jakobian> jakobians = calculateJakobiansOfElement(1, mygrid, elem_univ);
-	mygrid.elements[0].jakobian = jakobians[0];
-	mygrid.elements[0].jakobians = jakobians;
+	// calculating jakobians for every element
+	mygrid.calculateAllJakobians();
+	mygrid.elements[0].display();
 
 	std::cout << std::endl;
 	for (int i = 0; i < mygrid.npc; i++) {
-		// std::cout << "\nJakobian in pc" << i+1 << ":" << std::endl;
-		// jakobians[i].displayJakobian();
+		 std::cout << "\nJakobian in pc" << i+1 << ":" << std::endl;
+		 mygrid.elements[0].jakobians[i].displayJakobian();
 	}
 
 
 	// LAB 4 - H MATRIX
 
-	// creating dN/dx and dN/dy tables for test elem
-	double dN_dx = 0;
-	double dN_dy = 0;
-	Element elem = mygrid.findElementById(1);
+	// calculating shape derivatives
+	mygrid.calculateAllShapeDerivatives();
+	mygrid.elements[0].display_dN_dx();
+	mygrid.elements[0].display_dN_dy();
 
-	for (int i = 0; i < mygrid.npc; i++) {
-		std::vector<double> x_row;
-		std::vector<double> y_row;
-
-		// uzupelnianie tabel dla pc_i
-		for (int j = 0; j < 4; j++) {
-			dN_dx = elem.jakobians[i].J1[0][0] * elem_univ.dN_dE[i][j] + elem.jakobians[i].J1[0][1] * elem_univ.dN_dn[i][j];
-			dN_dy = elem.jakobians[i].J1[1][0] * elem_univ.dN_dE[i][j] + elem.jakobians[i].J1[1][1] * elem_univ.dN_dn[i][j];
-			x_row.push_back(dN_dx);
-			y_row.push_back(dN_dy);
-		}
-		elem.dN_dx.push_back(x_row);
-		elem.dN_dy.push_back(y_row);
-	}
-	elem.display_dN_dx();
-	elem.display_dN_dy();
-
-	// uzupelnianie macierzy H
-	std::vector<std::vector<double>> H(4, std::vector<double>(4, 0.0));
-	for (int i = 0; i < mygrid.npc; i++) {
-
-		std::vector<double> dNdx = elem.dN_dx[i];
-		std::vector<double> dNdy = elem.dN_dy[i];
-
-		// obliczanie elementow macierzy dla calego elementu
-		for (int j = 0; j < 4; j++) {
-			for (int k = 0; k < 4; k++) {
-				H[j][k] += elem.jakobians[i].detJ * 30 * (dNdx[j] * dNdx[k] + dNdy[j] * dNdy[k]);
-			}
-		}
-	}
-	elem.H = H;
-
-	std::cout << "\nMacierz H:\n";
-	for (int i = 0; i < 4; ++i) {
-		for (int j = 0; j < 4; ++j) {
-			std::cout << elem.H[i][j] << " ";
-		}
-		std::cout << "\n";
-	}
+	// calculating H matrix
+	mygrid.calculateAllMatrixH();
+	mygrid.elements[0].display_H();
 
 
 
 
-
-	// testing jakobian for grid from file
+	// testing grid from file
 	// reading grid from file
-	// std::cout << "\n\nJAKOBIAN TEST - grid 4x4:";
-	// Grid grid4x4 = readFromFile("grids\\Test1_4_4.txt");
-	//
-	// std::cout << std::fixed << std::setprecision(10);
-	//
-	// //  displaying jakobians of each element
-	// for (int i = 0; i < grid4x4.elements_number; i++) {
-	// 	std::cout << "\n";
-	// 	grid4x4.elements[i].display();
-	// 	grid4x4.elements[i].jakobian.displayJakobian();
-	// }
+	std::cout << "\n\nTEST - grid 4x4:";
+	Grid grid4x4 = readFromFile("grids\\Test1_4_4.txt");
 
-	// jakobians for each node in 1 element
-	// for (int i = 0; i < grid4x4.nodes_number; i++) {
-	// 	std::cout << "\n";
-	// 	grid4x4.elements[i].jakobians[0].displayJakobian();
-	// }
+	std::cout << std::fixed << std::setprecision(10);
 
+	// completing tables
+	grid4x4.npc = 4;
 
-	// czy jakobian ma byc taki sam dla kazdego punktu w elemencie?
-	// JAKOBIAN TAKI SAM W KAZDYM ELEMENCIE?
+	// assigning jakobian to all elements
+	grid4x4.calculateAllJakobians();
+	grid4x4.calculateAllShapeDerivatives();
+	grid4x4.calculateAllMatrixH();
 
 
 	return 0;

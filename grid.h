@@ -4,6 +4,7 @@
 #include "includes.h"
 #include "Element.h"
 #include "Node.h"
+class Element;
 
 // GRID structure
 struct Grid {
@@ -17,9 +18,13 @@ struct Grid {
     void displayGlobalData() const;
     void displayNodes() const;
     void displayElements() const;
+
     Element findElementById(int id);
     Node findNodeById(int id);
-    void calculateJakobiansOfElements();
+
+    void calculateAllJakobians();
+    void calculateAllShapeDerivatives();
+    void calculateAllMatrixH();
 };
 
 

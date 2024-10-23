@@ -21,3 +21,24 @@ void Element::display() const {
     }
     std::cout << node_id[3] << ")" << std::endl;
 }
+
+// displaying tables
+void Element::display_dN_dx() const {
+    std::cout << "\nTabela dN/dx:\n";
+    for (const auto& row : dN_dx) {
+        for (double value : row) {
+            std::cout << value << ", ";
+        }
+        std::cout << std::endl;
+    }
+}
+
+void Element::display_dN_dy() const {
+    std::cout << "\nTabela dN/dy:\n";
+    for (const auto& row : dN_dy) {
+        for (double value : row) {
+            std::cout << value << ", ";
+        }
+        std::cout << std::endl;
+    }
+}

@@ -9,8 +9,8 @@
 static const std::vector<Node> pc {
     Node(-1/sqrt(3), -1/sqrt(3)),   // pc1
     Node(1/sqrt(3), -1/sqrt(3)),   // pc2
-    Node(1/sqrt(3), 1/sqrt(3)),   // pc3
-    Node(-1/sqrt(3), 1/sqrt(3))   // pc4
+    Node(-1/sqrt(3), 1/sqrt(3)),   // pc3
+    Node(1/sqrt(3), 1/sqrt(3))   // pc4
 };
 
 // UNIVERSAL ELEMENT constructor, takes number of points, creates ksi and eta tables

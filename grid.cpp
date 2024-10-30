@@ -24,6 +24,13 @@ void Grid::displayElements() const {
         element.display();
     }
 }
+// displaying H matrix of each element
+void Grid::displayAllMatrixH() const {
+    for (const auto& element : elements) {
+        element.display_H();
+    }
+}
+
 // returning an element with given id
 Element Grid::findElementById(int id) {
     for (const auto& element : elements) {

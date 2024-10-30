@@ -18,6 +18,7 @@ struct Grid {
     void displayGlobalData() const;
     void displayNodes() const;
     void displayElements() const;
+    void displayAllMatrixH() const;
 
     Element findElementById(int id);
     Node findNodeById(int id);

@@ -3,6 +3,7 @@
 //
 
 #include "Element.h"
+#include "ElemUniv.h"
 
 // ELEMENT constructors
 Element::Element(): id(-1) {    // id and node_id = -1 if no values are given
@@ -26,7 +27,7 @@ void Element::calculateJakobians(Grid& grid) {
     ElemUniv elem_univ(grid.npc);
 
     //calculating jakobian for each npc
-    for (int i = 0; i < 4; i++) {
+    for (int i = 0; i < grid.npc; i++) {
         Jakobian jakobian;
         jakobian.calculateJakobian(elem_univ, nodes, i);
         jakobian.calculateInverse();
@@ -62,6 +63,19 @@ void Element::calculateShapeDerivatives(int npc){
 void Element::calculateMatrixH(int npc) {
     ElemUniv elem_univ(npc);
     std::vector<std::vector<double>> H(npc, std::vector<double>(4, 0.0));
+    std::vector<std::vector<double>> Hpc(npc, std::vector<double>(4, 0.0));
+
+    // assigning wages
+    std::vector<Node> current_wages;
+    if (npc == 1) {
+        current_wages = wages[0];
+    }
+    else if (npc == 4) {
+        current_wages = wages[1];
+    }
+    else if (npc == 9) {
+        current_wages = wages[2];
+    }
 
     for (int i = 0; i < npc; i++) {
         std::vector<double> dNdx = dN_dx[i];
@@ -70,7 +84,8 @@ void Element::calculateMatrixH(int npc) {
         // calculating H matrix elements for the whole element
         for (int j = 0; j < 4; j++) {
             for (int k = 0; k < 4; k++) {
-                H[j][k] += jakobians[i].detJ * 30 * (dNdx[j] * dNdx[k] + dNdy[j] * dNdy[k]);
+                H[j][k] += jakobians[i].detJ * 30 * (dNdx[j] * dNdx[k] + dNdy[j] * dNdy[k]) * current_wages[i].x * current_wages[i].y;
+                // std::cout << H[j][k] << std::endl;
             }
         }
     }
@@ -108,7 +123,7 @@ void Element::display_dN_dy() const {
 }
 // displaying H matrix
 void Element::display_H() const {
-    std::cout << "\nMatrix H:\n";
+    std::cout << "\nElement " << id << ":\n";
     for (int i = 0; i < 4; ++i) {
         for (int j = 0; j < 4; ++j) {
             std::cout << H[i][j] << " ";

@@ -77,6 +77,14 @@ Grid readFromFile(const std::string& path) {
 	return grid;
 }
 
+void calculateH(Grid &grid) {
+	grid.npc = 4;
+	grid.calculateAllJakobians();
+	grid.calculateAllShapeDerivatives();
+	grid.calculateAllMatrixH();
+}
+
+
 int main() {
 
 	// LAB 1 - READING GRID FROM FILE //
@@ -135,96 +143,103 @@ int main() {
 
 	// LAB 3 - JAKOBIAN / LAB 4, 5 - MATRIX H
 
-	// test element
-	// creating nodes
-	Node node1(1, 0, 0);
-	Node node2(2, 0.025, 0);
-	Node node3(3, 0.025, 0.025);
-	Node node4(4, 0, 0.025);
+	// // test element
+	// // creating nodes
+	// Node node1(1, 0, 0);
+	// Node node2(2, 0.025, 0);
+	// Node node3(3, 0.025, 0.025);
+	// Node node4(4, 0, 0.025);
+	//
+	// // creating	an element
+	// int nodes_id[4] = {1,2,3,4};
+	// Element element0(1, nodes_id);
+	//
+	// // completing a grid with nodes and element
+	// Grid mygrid;
+	// mygrid.elements.push_back(element0);
+	// mygrid.nodes.push_back(node1);
+	// mygrid.nodes.push_back(node2);
+	// mygrid.nodes.push_back(node3);
+	// mygrid.nodes.push_back(node4);
+	// mygrid.npc = 4;
+	// mygrid.nodes_number = 4;
+	// mygrid.elements_number = 1;
+	// mygrid.globalData["Conductivity"] = 30;
+	//
+	// // displaying nodes and element
+	// // mygrid.displayNodes();
+	// // mygrid.displayElements();
+	//
+	// // completing tables and displaying them
+	// // ElemUniv elem_univ_4pc(mygrid.npc);
+	// // elem_univ_4pc.display();
+	//
+	// // calculating jakobians for every element
+	// mygrid.calculateAllJakobians();
+	// // mygrid.elements[0].display();
+	//
+	// // calculating shape derivatives
+	// mygrid.calculateAllShapeDerivatives();
+	// // mygrid.elements[0].display_dN_dx();
+	// // mygrid.elements[0].display_dN_dy();
+	//
+	// // calculating H matrix
+	// mygrid.calculateAllMatrixH();
+	// std::cout << "\nTEST 0:\nMatrix H:" << std::endl;
+	// mygrid.elements[0].display_H();
+	//
+	// // TEST 1 - for 9 npc
+	// Element element1(2, nodes_id);
+	// mygrid.elements.push_back(element1);
+	// mygrid.npc = 9;
+	// mygrid.calculateAllJakobians();
+	// mygrid.calculateAllShapeDerivatives();
+	// mygrid.calculateAllMatrixH();
+	// std::cout << "\nTEST 1:\nMatrix H:" << std::endl;
+	// mygrid.elements[1].display_H();
+	// mygrid.elements[1].display_dN_dx();
+	// mygrid.elements[1].display_dN_dy();
+	//
+	// // TEST 2 - not square element
+	// Node node(5, 0.01, -0.01);
+	// nodes_id[0] = 5;
+	// Element element2(3, 	nodes_id);
+	// mygrid.elements.push_back(element2);
+	// mygrid.nodes.push_back(node);
+	// mygrid.npc = 4;
+	// mygrid.nodes_number ++;
+	// mygrid.elements_number ++;
+	// mygrid.calculateAllJakobians();
+	// mygrid.calculateAllShapeDerivatives();
+	// mygrid.calculateAllMatrixH();
+	// std::cout << "\nTEST 2:\nMatrix H:" << std::endl;
+	// mygrid.elements[2].display_H();
 
-	// creating	an element
-	int nodes_id[4] = {1,2,3,4};
-	Element element0(1, nodes_id);
 
-	// completing a grid with nodes and element
-	Grid mygrid;
-	mygrid.elements.push_back(element0);
-	mygrid.nodes.push_back(node1);
-	mygrid.nodes.push_back(node2);
-	mygrid.nodes.push_back(node3);
-	mygrid.nodes.push_back(node4);
-	mygrid.npc = 4;
-	mygrid.nodes_number = 4;
-	mygrid.elements_number = 1;
-
-	// displaying nodes and element
-	// mygrid.displayNodes();
-	// mygrid.displayElements();
-
-	// completing tables and displaying them
-	// ElemUniv elem_univ_4pc(mygrid.npc);
-	// elem_univ_4pc.display();
-
-	// calculating jakobians for every element
-	mygrid.calculateAllJakobians();
-	// mygrid.elements[0].display();
-
-	// calculating shape derivatives
-	mygrid.calculateAllShapeDerivatives();
-	// mygrid.elements[0].display_dN_dx();
-	// mygrid.elements[0].display_dN_dy();
-
-	// calculating H matrix
-	mygrid.calculateAllMatrixH();
-	std::cout << "\nTEST 0:\nMatrix H:" << std::endl;
-	mygrid.elements[0].display_H();
-
-	// TEST 1 - for 9 npc
-	Element element1(2, nodes_id);
-	mygrid.elements.push_back(element1);
-	mygrid.npc = 9;
-	mygrid.calculateAllJakobians();
-	mygrid.calculateAllShapeDerivatives();
-	mygrid.calculateAllMatrixH();
-	std::cout << "\nTEST 1:\nMatrix H:" << std::endl;
-	mygrid.elements[1].display_H();
-
-	// TEST 2 - not square element
-	Node node(5, 0.01, -0.01);
-	nodes_id[0] = 5;
-	Element element2(3, 	nodes_id);
-	mygrid.elements.push_back(element2);
-	mygrid.nodes.push_back(node);
-	mygrid.npc = 4;
-	mygrid.nodes_number ++;
-	mygrid.elements_number ++;
-	mygrid.calculateAllJakobians();
-	mygrid.calculateAllShapeDerivatives();
-	mygrid.calculateAllMatrixH();
-	std::cout << "\nTEST 2:\nMatrix H:" << std::endl;
-	mygrid.elements[2].display_H();
-
-
-
-
-
-	// testing grid from file
+	// LAB 6 - testing grids from file
 	// reading grid from file
 	std::cout << "\n\nTEST - grid 4x4:";
 	Grid grid4x4 = readFromFile("grids\\Test1_4_4.txt");
 
 	std::cout << std::fixed << std::setprecision(10);
+	calculateH(grid4x4);
 
-	// completing tables
-	grid4x4.npc = 9;
+	std::cout << "\nH Matrixes:";
+	grid4x4.displayAllMatrixH();
 
-	// assigning jakobian to all elements
-	grid4x4.calculateAllJakobians();
-	grid4x4.calculateAllShapeDerivatives();
-	grid4x4.calculateAllMatrixH();
+	std::cout << "\n\nTEST - migrid 4x4:";
+	Grid grid2 = readFromFile("grids\\Test3_31_31_kwadrat.txt");
+	grid2.displayNodes();
+	grid2.displayElements();
+
+
+	std::cout << std::fixed << std::setprecision(10);
+
+	calculateH(grid2);
 
 	// printing h matrix
-	grid4x4.displayAllMatrixH();
+	std::cout << "\nH Matrixes:";
+	grid2.displayAllMatrixH();
 
 
 	return 0;

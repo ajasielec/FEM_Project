@@ -20,7 +20,7 @@ struct Element {
 
     void calculateJakobians(Grid& grid);
     void calculateShapeDerivatives(int npc);
-    void calculateMatrixH(int npc);
+    void calculateMatrixH(int npc, int k);
 
     void display() const;
     void display_dN_dx() const;

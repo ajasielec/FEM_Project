@@ -8,5 +8,5 @@
 
 // functions
 Grid readFromFile(const std::string& path);
-
+void calculateH(Grid& grid);
 

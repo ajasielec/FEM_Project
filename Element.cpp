@@ -60,7 +60,7 @@ void Element::calculateShapeDerivatives(int npc){
     }
 }
 // calculating H matrix
-void Element::calculateMatrixH(int npc) {
+void Element::calculateMatrixH(int npc, int conductivity) {
     ElemUniv elem_univ(npc);
     std::vector<std::vector<double>> H(npc, std::vector<double>(4, 0.0));
     std::vector<std::vector<double>> Hpc(npc, std::vector<double>(4, 0.0));
@@ -84,9 +84,10 @@ void Element::calculateMatrixH(int npc) {
         // calculating H matrix elements for the whole element
         for (int j = 0; j < 4; j++) {
             for (int k = 0; k < 4; k++) {
-                H[j][k] += jakobians[i].detJ * 30 * (dNdx[j] * dNdx[k] + dNdy[j] * dNdy[k]) * current_wages[i].x * current_wages[i].y;
-                // std::cout << H[j][k] << std::endl;
+                H[j][k] += jakobians[i].detJ * conductivity * (dNdx[j] * dNdx[k] + dNdy[j] * dNdy[k]) * current_wages[i].x * current_wages[i].y;
+                // std::cout << H[j][k] <<"\t";
             }
+            // std::cout << std::endl;
         }
     }
     this->H = H;

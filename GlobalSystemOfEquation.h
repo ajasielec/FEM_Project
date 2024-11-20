@@ -10,9 +10,11 @@
 class GlobalSystemOfEquation {
 public:
     std::vector<std::vector<double>> globalMatrixH;
+
+    void displayMatrixH();
 };
 
-std::vector<std::vector<double>> aggregateMatrixH(const Grid&  grid, GlobalSystemOfEquation& globalSystemOfEquation);
+void aggregateMatrixH(const Grid&  grid, GlobalSystemOfEquation& globalSystemOfEquation);
 
 
 

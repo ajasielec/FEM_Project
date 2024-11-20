@@ -218,11 +218,11 @@ int main() {
 
 	// LAB 6 - testing grids from file
 	// reading grid from file
-	std::cout << "\n\nTEST - grid 4x4:";
-	Grid grid4x4 = readFromFile("grids\\Test1_4_4.txt");
-
-	std::cout << std::fixed << std::setprecision(10);
-	calculateH(grid4x4);
+	// std::cout << "\n\nTEST - grid 4x4:";
+	// Grid grid4x4 = readFromFile("grids\\Test1_4_4.txt");
+	//
+	// std::cout << std::fixed << std::setprecision(10);
+	// calculateH(grid4x4);
 
 	// std::cout << "\nH Matrixes:";
 	// grid4x4.displayAllMatrixH();
@@ -241,22 +241,34 @@ int main() {
 	// std::cout << "\nH Matrixes:";
 	// grid2.displayAllMatrixH();
 
-	// LAB7 - MATRIX H AGREGATION
-	// zbudowac macierz i w petli po elementach wrzucac do macierzy
+
+	// LAB7 - MATRIX H AGGREGATION
+
+	// TEST 1
+	std::cout << "\n\nTEST - grid 4x4:";
+	Grid grid4x4 = readFromFile("grids\\Test1_4_4.txt");
+	calculateH(grid4x4);
 
 	GlobalSystemOfEquation global_system_of_equation;
+	aggregateMatrixH(grid4x4, global_system_of_equation);
 
-	std::vector<std::vector<double>> globalMatrixH = aggregateMatrixH(grid4x4, global_system_of_equation);
-
-	//diplay global h
+	// diplay global h
+	std::cout << std::fixed << std::setprecision(3);
 	std::cout << "\n\nGLOBAL H:" << std::endl;
-	for (int i = 0; i < globalMatrixH.size(); i++) {
-		std::cout << std::fixed << std::setprecision(1);
-		for (int j = 0; j < globalMatrixH[i].size(); j++) {
-			std::cout << globalMatrixH[i][j] << " ";
-		}
-		std::cout << std::endl;
-	}
+	global_system_of_equation.displayMatrixH();
+
+
+	// TEST 2
+	std::cout << "\n\nTEST - mix grid 4x4:";
+	Grid mix_grid4x4 = readFromFile("grids\\Test2_4_4_MixGrid.txt");
+	calculateH(mix_grid4x4);
+
+	aggregateMatrixH(mix_grid4x4, global_system_of_equation);
+
+	// diplay global h
+	std::cout << std::fixed << std::setprecision(3);
+	std::cout << "\n\nGLOBAL H:" << std::endl;
+	global_system_of_equation.displayMatrixH();
 
 
 	return 0;

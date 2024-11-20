@@ -224,22 +224,39 @@ int main() {
 	std::cout << std::fixed << std::setprecision(10);
 	calculateH(grid4x4);
 
-	std::cout << "\nH Matrixes:";
-	grid4x4.displayAllMatrixH();
+	// std::cout << "\nH Matrixes:";
+	// grid4x4.displayAllMatrixH();
 
-	std::cout << "\n\nTEST - migrid 4x4:";
-	Grid grid2 = readFromFile("grids\\Test3_31_31_kwadrat.txt");
-	grid2.displayNodes();
-	grid2.displayElements();
+	// std::cout << "\n\nTEST - migrid 4x4:";
+	// Grid grid2 = readFromFile("grids\\Test3_31_31_kwadrat.txt");
+	// grid2.displayNodes();
+	// grid2.displayElements();
+	//
+	//
+	// std::cout << std::fixed << std::setprecision(10);
+	//
+	// calculateH(grid2);
+	//
+	// // printing h matrix
+	// std::cout << "\nH Matrixes:";
+	// grid2.displayAllMatrixH();
 
+	// LAB7 - MATRIX H AGREGATION
+	// zbudowac macierz i w petli po elementach wrzucac do macierzy
 
-	std::cout << std::fixed << std::setprecision(10);
+	GlobalSystemOfEquation global_system_of_equation;
 
-	calculateH(grid2);
+	std::vector<std::vector<double>> globalMatrixH = aggregateMatrixH(grid4x4, global_system_of_equation);
 
-	// printing h matrix
-	std::cout << "\nH Matrixes:";
-	grid2.displayAllMatrixH();
+	//diplay global h
+	std::cout << "\n\nGLOBAL H:" << std::endl;
+	for (int i = 0; i < globalMatrixH.size(); i++) {
+		std::cout << std::fixed << std::setprecision(1);
+		for (int j = 0; j < globalMatrixH[i].size(); j++) {
+			std::cout << globalMatrixH[i][j] << " ";
+		}
+		std::cout << std::endl;
+	}
 
 
 	return 0;

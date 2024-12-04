@@ -6,10 +6,11 @@
 struct Node {
     int id;
     double x, y;
+    bool BC;
 
     Node();
     Node(double x, double y);
-    Node(int id, double x, double y);
+    Node(int id, double x, double y, bool BC);
     void display() const;
 };
 

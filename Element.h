@@ -14,6 +14,7 @@ struct Element {
     std::vector<std::vector<double>> dN_dx; // table dN/dx
     std::vector<std::vector<double>> dN_dy; // table dN/dy
     std::vector<std::vector<double>> H;     // H matrix
+    std::vector<std::vector<double>> Hbc;     // H matrix
 
     Element();
     Element (int id, const int node_id[4]);

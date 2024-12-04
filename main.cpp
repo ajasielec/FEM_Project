@@ -74,6 +74,26 @@ Grid readFromFile(const std::string& path) {
 		}
 	}
 
+	// reading BC to set
+	std::set<int> bcNodes;
+	while (std::getline(myfile, line)) {
+		std::istringstream iss(line);
+		int nodeId;
+		while (iss >> nodeId) {
+			bcNodes.insert(nodeId);
+			if(iss.peek() == ',') iss.ignore();
+		}
+	}
+
+	// set the BC flag for nodes
+	for (auto& node : grid.nodes) {
+		if (bcNodes.find(node.id) != bcNodes.end()) {
+			node.BC = true;
+		} else {
+			node.BC = false;
+		}
+	}
+
 	return grid;
 }
 
@@ -245,30 +265,42 @@ int main() {
 	// LAB7 - MATRIX H AGGREGATION
 
 	// TEST 1
-	std::cout << "\n\nTEST - grid 4x4:";
+	// std::cout << "\n\nTEST - grid 4x4:";
+	// Grid grid4x4 = readFromFile("grids\\Test1_4_4.txt");
+	// calculateH(grid4x4);
+	//
+	// GlobalSystemOfEquation global_system_of_equation;
+	// aggregateMatrixH(grid4x4, global_system_of_equation);
+	//
+	// // diplay global h
+	// std::cout << std::fixed << std::setprecision(3);
+	// std::cout << "\n\nGLOBAL H:" << std::endl;
+	// global_system_of_equation.displayMatrixH();
+	//
+	//
+	// // TEST 2
+	// std::cout << "\n\nTEST - mix grid 4x4:";
+	// Grid mix_grid4x4 = readFromFile("grids\\Test2_4_4_MixGrid.txt");
+	// calculateH(mix_grid4x4);
+	//
+	// aggregateMatrixH(mix_grid4x4, global_system_of_equation);
+	//
+	// // diplay global h
+	// std::cout << std::fixed << std::setprecision(3);
+	// std::cout << "\n\nGLOBAL H:" << std::endl;
+	// global_system_of_equation.displayMatrixH();
+
+	// LAB 8 - przeczytanie wezlow z pliku - dodac bool do node (1 - jeste brzegowy, 0 - nie jest na brzegu)
+	// warunek brzegowy gdy 2 wezly na brzegu (z flaga 1)
+	// wyznaczenie w strukturze elementu drugiego schematu calkowania ktory dotyczy TYLKO calkowania na powierzchni
+	// calka w 1 i 2 punktcie i zsumowac
+	// wyznacznik z pitagorasa
+
+	// read BC from file added
 	Grid grid4x4 = readFromFile("grids\\Test1_4_4.txt");
-	calculateH(grid4x4);
-
-	GlobalSystemOfEquation global_system_of_equation;
-	aggregateMatrixH(grid4x4, global_system_of_equation);
-
-	// diplay global h
-	std::cout << std::fixed << std::setprecision(3);
-	std::cout << "\n\nGLOBAL H:" << std::endl;
-	global_system_of_equation.displayMatrixH();
-
-
-	// TEST 2
-	std::cout << "\n\nTEST - mix grid 4x4:";
-	Grid mix_grid4x4 = readFromFile("grids\\Test2_4_4_MixGrid.txt");
-	calculateH(mix_grid4x4);
-
-	aggregateMatrixH(mix_grid4x4, global_system_of_equation);
-
-	// diplay global h
-	std::cout << std::fixed << std::setprecision(3);
-	std::cout << "\n\nGLOBAL H:" << std::endl;
-	global_system_of_equation.displayMatrixH();
+	for (int i = 0; i < grid4x4.nodes_number; i++) {
+		std::cout << grid4x4.nodes[i].id << " - BC: " << grid4x4.nodes[i].BC << std::endl;
+	}
 
 
 	return 0;

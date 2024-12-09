@@ -56,10 +56,10 @@ ElemUniv::ElemUniv(int npc) {
         surface[3].boundary_pc = leftSide[0];
     }
     else if (npc == 4) {
-        surface[0].boundary_pc = upSide[1];
-        surface[1].boundary_pc = leftSide[1];
-        surface[2].boundary_pc = downSide[1];
-        surface[3].boundary_pc = rightSide[1];
+        surface[0].boundary_pc = downSide[1];
+        surface[1].boundary_pc = rightSide[1];
+        surface[2].boundary_pc = upSide[1];
+        surface[3].boundary_pc = leftSide[1];
     }
 }
 

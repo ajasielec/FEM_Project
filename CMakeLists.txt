@@ -19,4 +19,6 @@ add_executable(FEM_Project main.cpp
         Jakobian.h
         includes.h
         GlobalSystemOfEquation.cpp
-        GlobalSystemOfEquation.h)
+        GlobalSystemOfEquation.h
+        Elem2d_4.cpp
+        Elem2d_4.h)

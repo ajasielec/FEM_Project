@@ -5,11 +5,13 @@
 #include "ElemUniv.h"
 
 
-// UNIVERSAL ELEMENT constructor, takes number of points, creates ksi and eta tables
+// UNIVERSAL ELEMENT constructor, takes number of points, creates ksi and eta tables, completing surface struct
 ElemUniv::ElemUniv(int npc) {
+    this->npc = npc;
 
     std::vector<Node> current_pc;
     std::vector<Node> current_wages;
+    std::vector<Node> current_N;
 
     if (npc == 1) {
         current_pc = pc[0];
@@ -45,7 +47,22 @@ ElemUniv::ElemUniv(int npc) {
         dN_dE.push_back(x_row);
         dN_dn.push_back(y_row);
     }
+
+    // completing surface array
+    if (npc == 1) {
+        surface[0].boundary_pc = downSide[0];
+        surface[1].boundary_pc = rightSide[0];
+        surface[2].boundary_pc = upSide[0];
+        surface[3].boundary_pc = leftSide[0];
+    }
+    else if (npc == 4) {
+        surface[0].boundary_pc = downSide[1];
+        surface[1].boundary_pc = rightSide[1];
+        surface[2].boundary_pc = upSide[1];
+        surface[3].boundary_pc = leftSide[1];
+    }
 }
+
 // displaying ksi and eta tables
 void ElemUniv::display() const {
     std::cout << "\nTabela ksi:\n";

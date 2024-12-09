@@ -67,7 +67,7 @@ void Grid::calculateAllShapeDerivatives() {
 //calculating H matrix for each element
 void Grid::calculateAllMatrixH() {
     for (auto& element : elements) {
-        element.calculateMatrixH(npc, globalData["Conductivity"]);
+        element.calculateMatrixH(npc, globalData["Conductivity"], *this);
     }
 }
 

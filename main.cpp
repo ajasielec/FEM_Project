@@ -297,11 +297,44 @@ int main() {
 	// wyznacznik z pitagorasa
 
 	// read BC from file added
-	Grid grid4x4 = readFromFile("grids\\Test1_4_4.txt");
-	for (int i = 0; i < grid4x4.nodes_number; i++) {
-		std::cout << grid4x4.nodes[i].id << " - BC: " << grid4x4.nodes[i].BC << std::endl;
-	}
+	// Grid grid4x4 = readFromFile("grids\\Test1_4_4.txt");
+	// for (int i = 0; i < grid4x4.nodes_number; i++) {
+	// 	std::cout << grid4x4.nodes[i].id << " - BC: " << grid4x4.nodes[i].BC << std::endl;
+	// }
+	//
+	// calculateH(grid4x4);
+	//
+	// // displaying all H
+	// grid4x4.displayAllMatrixH();
 
+	// test element
+	Node node1(1, 0, 0, 1);
+	Node node2(2, 0.025, 0, 1);
+	Node node3(3, 0.025, 0.025, 0);
+	Node node4(4, 0, 0.025, 1);
+
+	// creating	an element
+	int nodes_id[4] = {1,2,3,4};
+	Element element0(1, nodes_id);
+
+	// completing a grid with nodes and element
+	Grid mygrid;
+	mygrid.elements.push_back(element0);
+	mygrid.nodes.push_back(node1);
+	mygrid.nodes.push_back(node2);
+	mygrid.nodes.push_back(node3);
+	mygrid.nodes.push_back(node4);
+	mygrid.npc = 4;
+	mygrid.nodes_number = 4;
+	mygrid.elements_number = 1;
+	mygrid.globalData["Conductivity"] = 25;
+
+	// displaying nodes and element
+	mygrid.displayNodes();
+	mygrid.displayElements();
+
+	// calculating H matrix
+	calculateH(mygrid);
 
 	return 0;
 }

@@ -18,4 +18,10 @@
 #include <map>
 #include <set>
 
+template <typename T>
+    using Matrix = std::vector< std::vector<T>>;
+
+template <typename T>
+    using Vector = std::vector<T>;
+
 #endif //INCLUDES_H

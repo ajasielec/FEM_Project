@@ -3,6 +3,9 @@
 //
 
 #include "Element.h"
+
+#include <thread>
+
 #include "ElemUniv.h"
 
 // ELEMENT constructors
@@ -59,11 +62,12 @@ void Element::calculateShapeDerivatives(int npc){
         dN_dy.push_back(y_row);
     }
 }
+
 // calculating H matrix
-void Element::calculateMatrixH(int npc, int conductivity) {
+void Element::calculateMatrixH(int npc, int conductivity, Grid& grid) {
     ElemUniv elem_univ(npc);
-    std::vector<std::vector<double>> H(npc, std::vector<double>(4, 0.0));
-    std::vector<std::vector<double>> Hpc(npc, std::vector<double>(4, 0.0));
+    Matrix<double> H(npc, Vector<double>(4, 0.0));
+    Matrix<double> Hpc(npc, Vector<double>(4, 0.0));
 
     // assigning wages
     std::vector<Node> current_wages;
@@ -90,6 +94,81 @@ void Element::calculateMatrixH(int npc, int conductivity) {
             // std::cout << std::endl;
         }
     }
+
+    // calculating HBC matrix
+    // completing N tables
+    for (int i = 0; i < sqrt(npc); i++) {
+        double ksi = elem_univ.surface[3].boundary_pc[i].x;
+        double eta = elem_univ.surface[3].boundary_pc[i].y;
+        Vector<double> row;
+        row.push_back(0.25 * (1 - ksi) * (1 - eta));    // N1
+        row.push_back(0.25 * (1 + ksi) * (1 - eta));    // N2
+        row.push_back(0.25 * (1 + ksi) * (1 + eta));    // N3
+        row.push_back(0.25 * (1 - ksi) * (1 + eta));    // N4
+        elem_univ.surface[3].N.push_back(row);
+    }
+
+    // // displaying N table
+    std::cout << "\nN TABLE TEST:" << std::endl;
+    for (int i = 0; i < sqrt(npc); i++) {
+        for (int j = 0; j < 4; j++) {
+            std::cout << elem_univ.surface[3].N[i][j] << " ";
+        }
+        std::cout << std::endl;
+    }
+
+    // calculating det
+
+    // calculating Hbc on one side (left)
+    Matrix<double> Hbc_single(4, Vector<double>(4, 0.0));
+    for (int i = 0; i < sqrt(npc); i++) {
+        for (int j = 0; j < 4; j++) {
+            for (int k = 0; k < 4; k++) {
+                Hbc_single[j][k] += 0.0125 * conductivity * (elem_univ.surface[3].N[i][j] * elem_univ.surface[3].N[i][k]) * current_wages[3].x;
+            }
+        }
+    }
+
+    // down
+
+
+    // right
+
+    // up
+
+    std::cout << "\nSINGLE HBC MATRIX TEST:" << std::endl;
+    for (int i = 0; i < 4; i++) {
+        for (int j = 0; j < 4; j++) {
+            std::cout << Hbc_single[i][j] << " ";
+        }
+        std::cout << std::endl;
+    }
+
+    // for (int i = 0; i < 4; i++) {
+    //     Node node = grid.findNodeById(this->node_id[i]);
+    //
+    //     // check BC flag
+    //     if (node.BC) {
+    //         // adding BC to H matrix
+    //         for (int j = 0; j < 4; j++) {
+    //             if (this->node_id[i] == this->node_id[j]) {
+    //                 H[i][j] = conductivity;
+    //             } else {
+    //                 H[i][j] = 0;
+    //             }
+    //         }
+    //     }
+    // }
+
+    // adding HBC to H
+    for (int i = 0; i < npc; i++) {
+        for (int j = 0; j < 4; j++) {
+            H[i][j] += Hbc[i][j];
+        }
+    }
+
+    // HBC IS NOT YES
+
     this->H = H;
 }
 

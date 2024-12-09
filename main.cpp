@@ -308,13 +308,14 @@ int main() {
 	// grid4x4.displayAllMatrixH();
 
 	// test element
+	std::cout << "TEST ELEMENT:" << std::endl;
 	Node node1(1, 0, 0, 1);
 	Node node2(2, 0.025, 0, 1);
-	Node node3(3, 0.025, 0.025, 0);
+	Node node3(3, 0.025, 0.025, 1);
 	Node node4(4, 0, 0.025, 1);
 
 	// creating	an element
-	int nodes_id[4] = {1,2,3,4};
+	int nodes_id[4] = {3,4,1,2};
 	Element element0(1, nodes_id);
 
 	// completing a grid with nodes and element
@@ -328,6 +329,7 @@ int main() {
 	mygrid.nodes_number = 4;
 	mygrid.elements_number = 1;
 	mygrid.globalData["Conductivity"] = 25;
+	mygrid.globalData["Alfa"] = 25;
 
 	// displaying nodes and element
 	mygrid.displayNodes();
@@ -335,6 +337,34 @@ int main() {
 
 	// calculating H matrix
 	calculateH(mygrid);
+
+	mygrid.displayAllMatrixH();
+
+	// grid 4x4 test
+	std::cout << "GRID 4X4 TEST:" << std::endl;
+	Grid grid4x4 = readFromFile("grids\\Test1_4_4.txt");
+	grid4x4.npc = 4;
+	for (int i = 0; i < grid4x4.nodes_number; i++) {
+		std::cout << grid4x4.nodes[i].id << " - BC: " << grid4x4.nodes[i].BC << std::endl;
+	}
+
+	grid4x4.displayNodes();
+	grid4x4.displayElements();
+
+	calculateH(grid4x4);
+
+	// displaying all H
+	grid4x4.displayAllMatrixH();
+
+	// H agregation
+	GlobalSystemOfEquation global_system_of_equation;
+	aggregateMatrixH(grid4x4, global_system_of_equation);
+
+	// diplay global h
+	std::cout << std::fixed << std::setprecision(3);
+	std::cout << "\n\nGLOBAL H:" << std::endl;
+	global_system_of_equation.displayMatrixH();
+
 
 	return 0;
 }

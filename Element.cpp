@@ -68,6 +68,7 @@ void Element::calculateMatrixH(int npc, int conductivity, Grid& grid) {
     ElemUniv elem_univ(npc);
     Matrix<double> H(npc, Vector<double>(4, 0.0));
     Matrix<double> Hpc(npc, Vector<double>(4, 0.0));
+    double alpha = grid.globalData["Alfa"];
 
     // assigning wages
     std::vector<Node> current_wages;
@@ -97,77 +98,156 @@ void Element::calculateMatrixH(int npc, int conductivity, Grid& grid) {
 
     // calculating HBC matrix
     // completing N tables
-    for (int i = 0; i < sqrt(npc); i++) {
-        double ksi = elem_univ.surface[3].boundary_pc[i].x;
-        double eta = elem_univ.surface[3].boundary_pc[i].y;
-        Vector<double> row;
-        row.push_back(0.25 * (1 - ksi) * (1 - eta));    // N1
-        row.push_back(0.25 * (1 + ksi) * (1 - eta));    // N2
-        row.push_back(0.25 * (1 + ksi) * (1 + eta));    // N3
-        row.push_back(0.25 * (1 - ksi) * (1 + eta));    // N4
-        elem_univ.surface[3].N.push_back(row);
+    for (int j = 0 ; j < 4; j++) {
+        for (int i = 0; i < sqrt(npc); i++) {
+            double ksi = elem_univ.surface[j].boundary_pc[i].x;
+            double eta = elem_univ.surface[j].boundary_pc[i].y;
+            Vector<double> row;
+            row.push_back(0.25 * (1 - ksi) * (1 - eta));    // N1
+            row.push_back(0.25 * (1 + ksi) * (1 - eta));    // N2
+            row.push_back(0.25 * (1 + ksi) * (1 + eta));    // N3
+            row.push_back(0.25 * (1 - ksi) * (1 + eta));    // N4
+            elem_univ.surface[j].N.push_back(row);
+        }
     }
+
 
     // // displaying N table
-    std::cout << "\nN TABLE TEST:" << std::endl;
-    for (int i = 0; i < sqrt(npc); i++) {
-        for (int j = 0; j < 4; j++) {
-            std::cout << elem_univ.surface[3].N[i][j] << " ";
-        }
-        std::cout << std::endl;
-    }
-
-    // calculating det
-
-    // calculating Hbc on one side (left)
-    Matrix<double> Hbc_single(4, Vector<double>(4, 0.0));
-    for (int i = 0; i < sqrt(npc); i++) {
-        for (int j = 0; j < 4; j++) {
-            for (int k = 0; k < 4; k++) {
-                Hbc_single[j][k] += 0.0125 * conductivity * (elem_univ.surface[3].N[i][j] * elem_univ.surface[3].N[i][k]) * current_wages[3].x;
-            }
-        }
-    }
-
-    // down
+    // std::cout << "\nN TABLE TEST:" << std::endl;
+    // for (int i = 0; i < sqrt(npc); i++) {
+    //     for (int j = 0; j < 4; j++) {
+    //         std::cout << elem_univ.surface[3].N[i][j] << " ";
+    //     }
+    //     std::cout << std::endl;
+    // }
 
 
-    // right
-
-    // up
-
-    std::cout << "\nSINGLE HBC MATRIX TEST:" << std::endl;
-    for (int i = 0; i < 4; i++) {
-        for (int j = 0; j < 4; j++) {
-            std::cout << Hbc_single[i][j] << " ";
-        }
-        std::cout << std::endl;
-    }
-
-    // for (int i = 0; i < 4; i++) {
-    //     Node node = grid.findNodeById(this->node_id[i]);
-    //
-    //     // check BC flag
+    // // adding hbc to H
+    // for (int h = 0; h < 4; h++) {
+    //     // checking if node is boundary
+    //     Node node = grid.findNodeById(this->node_id[h]);
+    //     // std::cout << node.BC << std::endl;
     //     if (node.BC) {
-    //         // adding BC to H matrix
-    //         for (int j = 0; j < 4; j++) {
-    //             if (this->node_id[i] == this->node_id[j]) {
-    //                 H[i][j] = conductivity;
-    //             } else {
-    //                 H[i][j] = 0;
+    //         for (int i = 0; i < sqrt(npc); i++) {
+    //             for (int j = 0; j < 4; j++) {
+    //                 for (int k = 0; k < 4; k++) {
+    //                     H[j][k] += 0.0125 * conductivity * (elem_univ.surface[h].N[i][j] * elem_univ.surface[h].N[i][k]) * 1;
+    //                 }
+    //                 //std::cout << std::endl;
     //             }
     //         }
     //     }
     // }
+    std::cout << "\nELEMENT: " << id << std::endl;
 
-    // adding HBC to H
-    for (int i = 0; i < npc; i++) {
-        for (int j = 0; j < 4; j++) {
-            H[i][j] += Hbc[i][j];
+    // calculating Hbc on each side
+    Matrix<double> Hbc(4, Vector<double>(4, 0.0));
+    // up
+    Node node1 = grid.findNodeById(this->node_id[0]);
+    Node node2 = grid.findNodeById(this->node_id[1]);
+    if (node1.BC && node2.BC) {
+        Matrix<double> Hbc_up(4, Vector<double>(4, 0.0));
+        double det_up = (node1.x - node2.x) / 2;
+        std::cout << "KURWA = " << current_wages[0].x << std::endl;
+        for (int i = 0; i < sqrt(npc); i++) {
+            for (int j = 0; j < 4; j++) {
+                for (int k = 0; k < 4; k++) {
+                    Hbc_up[j][k] += det_up * alpha * (elem_univ.surface[0].N[i][j] * elem_univ.surface[0].N[i][k]) * current_wages[0].x;
+                }
+            }
+        }
+        // DEBUG
+        std::cout << "\nHBC UP" << std::endl;
+        for (int i = 0; i < 4; i++) {
+            for (int j = 0; j < 4; j++) {
+                Hbc[i][j] += Hbc_up[i][j];
+                std::cout << Hbc[i][j] << "\t";
+            }
+            std::cout << std::endl;
         }
     }
 
-    // HBC IS NOT YES
+    // left
+    node1 = grid.findNodeById(this->node_id[1]);
+    node2 = grid.findNodeById(this->node_id[2]);
+    if (node1.BC && node2.BC) {
+        Matrix<double> Hbc_left(4, Vector<double>(4, 0.0));
+        double det_left = (node1.y - node2.y) / 2;
+        for (int i = 0; i < sqrt(npc); i++) {
+            for (int j = 0; j < 4; j++) {
+                for (int k = 0; k < 4; k++) {
+                    Hbc_left[j][k] += det_left * alpha * (elem_univ.surface[1].N[i][j] * elem_univ.surface[1].N[i][k]) * current_wages[1].x;
+                }
+            }
+        }
+        // DEBUG
+        std::cout << "\nHBC LEFT" << std::endl;
+        for (int i = 0; i < 4; i++) {
+            for (int j = 0; j < 4; j++) {
+                Hbc[i][j] += Hbc_left[i][j];
+                std::cout << Hbc_left[i][j] << "\t";
+            }
+            std::cout << std::endl;
+        }
+    }
+
+    // down
+    node1 = grid.findNodeById(this->node_id[2]);
+    node2 = grid.findNodeById(this->node_id[3]);
+    if (node1.BC && node2.BC) {
+        Matrix<double> Hbc_down(4, Vector<double>(4, 0.0));
+        double det_down = (node2.x - node1.x) / 2;
+        for (int i = 0; i < sqrt(npc); i++) {
+            for (int j = 0; j < 4; j++) {
+                for (int k = 0; k < 4; k++) {
+                    Hbc_down[j][k] += det_down * alpha * (elem_univ.surface[2].N[i][j] * elem_univ.surface[2].N[i][k]) * current_wages[1].x;
+                }
+            }
+        }
+        // DEBUG
+        std::cout << "\nHBC DOWN" << std::endl;
+        for (int i = 0; i < 4; i++) {
+            for (int j = 0; j < 4; j++) {
+                Hbc[i][j] += Hbc_down[i][j];
+                std::cout << Hbc_down[i][j] << "\t";
+            }
+            std::cout << std::endl;
+        }
+    }
+
+    // right
+    node1 = grid.findNodeById(this->node_id[3]);
+    node2 = grid.findNodeById(this->node_id[0]);
+    if (node1.BC && node2.BC) {
+        Matrix<double> Hbc_right(4, Vector<double>(4, 0.0));
+        double det_right = (node2.y - node1.y) / 2;
+        for (int i = 0; i < sqrt(npc); i++) {
+            for (int j = 0; j < 4; j++) {
+                for (int k = 0; k < 4; k++) {
+                    Hbc_right[j][k] += det_right * alpha * (elem_univ.surface[3].N[i][j] * elem_univ.surface[3].N[i][k]) * current_wages[1].x;
+                }
+            }
+        }
+        // DEBUG
+        std::cout << "\nHBC RIGHT" << std::endl;
+        for (int i = 0; i < 4; i++) {
+            for (int j = 0; j < 4; j++) {
+                Hbc[i][j] += Hbc_right[i][j];
+                std::cout << Hbc[i][j] << "\t";
+            }
+            std::cout << std::endl;
+        }
+    }
+
+    // adding hbc to h
+    std::cout << "adding Hbc to H..." << std::endl;
+    for (int i = 0; i < 4; i++) {
+        for (int j = 0; j < 4; j++) {
+            H[i][j] += Hbc[i][j];
+            std::cout << H[i][j] << "\t";
+        }
+        std::cout << std::endl;
+    }
 
     this->H = H;
 }

@@ -28,11 +28,13 @@ const Matrix<Node> wages {
 // static data for Hbc matrix
 const Matrix<Node> downSide {
                 {Node(0.0, -1.0)},        // npc = 1
-                {Node(-1/sqrt(3), -1.0), Node(1/sqrt(3), -1.0)}     // npc = 2
+                {Node(-1/sqrt(3), -1.0), Node(1/sqrt(3), -1.0)},     // npc = 2
+                {Node(-sqrt((3.0/5.0)), -1),  Node(0.0, -1.0), Node(sqrt((3.0/5.0)), -1.0)}     // npc = 3
 };
 const Matrix<Node> rightSide {
                 {Node(1.0, 0.0)},        // npc = 1
-                {Node(1.0, -1/sqrt(3)), Node(1.0, 1/sqrt(3))}     // npc = 2
+                {Node(1.0, -1/sqrt(3)), Node(1.0, 1/sqrt(3))},     // npc = 2
+                //{Node(-sqrt((3.0/5.0)), -1),  Node(0.0, -1.0), Node(sqrt((3.0/5.0)), -1.0)}     // npc = 3
 };
 const Matrix<Node> upSide {
                     {Node(0.0, 1.0)},

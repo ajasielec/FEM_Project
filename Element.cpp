@@ -64,11 +64,17 @@ void Element::calculateShapeDerivatives(int npc){
 }
 
 // calculating H matrix
-void Element::calculateMatrixH(int npc, int conductivity, Grid& grid) {
+void Element::calculateMatrixH(Grid& grid) {
+    double alpha = grid.globalData["Alfa"];
+    double conductivity = grid.globalData["Conductivity"];
+    int npc = grid.npc;
+    double ambient_temp = grid.globalData["Tot"];
+
     ElemUniv elem_univ(npc);
     Matrix<double> H(npc, Vector<double>(4, 0.0));
     Matrix<double> Hpc(npc, Vector<double>(4, 0.0));
-    double alpha = grid.globalData["Alfa"];
+    Vector<double> P(4, 0.0);
+
 
     // assigning wages
     std::vector<Node> current_wages;
@@ -123,6 +129,7 @@ void Element::calculateMatrixH(int npc, int conductivity, Grid& grid) {
                 for (int k = 0; k < 4; k++) {
                     H[j][k] += det_up * alpha * (elem_univ.surface[0].N[i][j] * elem_univ.surface[0].N[i][k]) * current_wages[0].x;
                 }
+                P[j] +=  det_up * alpha * ambient_temp * elem_univ.surface[0].N[i][j] * current_wages[0].x;
             }
         }
     }
@@ -138,6 +145,7 @@ void Element::calculateMatrixH(int npc, int conductivity, Grid& grid) {
                 for (int k = 0; k < 4; k++) {
                     H[j][k] += det_left * alpha * (elem_univ.surface[1].N[i][j] * elem_univ.surface[1].N[i][k]) * current_wages[1].x;
                 }
+                P[j] += det_left * alpha * ambient_temp * elem_univ.surface[1].N[i][j] * current_wages[1].x;
             }
         }
     }
@@ -153,6 +161,7 @@ void Element::calculateMatrixH(int npc, int conductivity, Grid& grid) {
                 for (int k = 0; k < 4; k++) {
                     H[j][k] += det_down * alpha * (elem_univ.surface[2].N[i][j] * elem_univ.surface[2].N[i][k]) * current_wages[1].x;
                 }
+                P[j] += det_down * alpha * ambient_temp * elem_univ.surface[2].N[i][j] * current_wages[1].x;
             }
         }
     }
@@ -168,12 +177,24 @@ void Element::calculateMatrixH(int npc, int conductivity, Grid& grid) {
                 for (int k = 0; k < 4; k++) {
                     H[j][k] += det_right * alpha * (elem_univ.surface[3].N[i][j] * elem_univ.surface[3].N[i][k]) * current_wages[1].x;
                 }
+                P[j] += det_right * alpha * ambient_temp * elem_univ.surface[3].N[i][j] * current_wages[1].x;
             }
         }
     }
 
     this->H = H;
+    this->P = P;
+
+    //DEBUG
+    // std::cout << "VECTOR P:" << std::endl;
+    display_P();
 }
+
+// calculating vector P
+void Element::calculateVectorP(int npc, Grid &grid) {
+
+}
+
 
 // method that displays a single element
 void Element::display() const {
@@ -194,6 +215,7 @@ void Element::display_dN_dx() const {
         std::cout << std::endl;
     }
 }
+
 // displaying dN/dy table
 void Element::display_dN_dy() const {
     std::cout << "\ndN/dy table:\n";
@@ -204,6 +226,7 @@ void Element::display_dN_dy() const {
         std::cout << std::endl;
     }
 }
+
 // displaying H matrix
 void Element::display_H() const {
     std::cout << "\nElement " << id << ":\n";
@@ -213,6 +236,14 @@ void Element::display_H() const {
         }
         std::cout << "\n";
     }
+}
+
+void Element::display_P() const {
+    std::cout << "\nElement " << id << ":\n";
+    for (int i = 0; i < 4; ++i) {
+            std::cout << P[i] << " ";
+    }
+    std::cout << std::endl;
 }
 
 

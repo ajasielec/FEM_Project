@@ -4,6 +4,19 @@
 
 #include "GlobalSystemOfEquation.h"
 #include "includes.h"
+#define SMALL_NUMBER 0.0001
+
+void GlobalSystemOfEquation::solve() {
+    // metoda gaussa
+    Matrix<double> matrix;
+    matrix = scalMacierz(globalMatrixH, globalVectorP);
+
+    if(zeroOnDiagonal(globalMatrixH)) {
+        std::cout << "Obliczenia niemozliwe - zera na przekatnej!" << std::endl;
+    } else {
+        vectorT = GaussElimination(matrix);
+    }
+}
 
 void GlobalSystemOfEquation::displayMatrixH() {
     for (int i = 0; i < globalMatrixH.size(); i++) {
@@ -14,12 +27,58 @@ void GlobalSystemOfEquation::displayMatrixH() {
     }
 }
 
+// function to gauss elimination
+bool zeroOnDiagonal(Matrix<double> matrix) {
+    for (int i = 0; i < matrix.size(); i++) {
+        if (matrix[i][i] == 0) return true;
+    }
+    return false;
+}
+
+Vector <double> GaussElimination(Matrix<double> matrix) {
+    // 1 etap
+    int n = matrix.size();
+    double m = 0;
+    for (int z = 0; z < n; z++) {
+        for (int i = z + 1; i < n; i++) {
+            m = matrix[i][z] / matrix[z][z];
+            for (int j = 0; j < n + 1; j++) {
+                matrix[i][j] -= (matrix[z][j] * m);
+                if (abs(matrix[i][j]) < SMALL_NUMBER) {
+                    matrix[i][j] = 0;
+                }
+            }
+        }
+    }
+
+    // 2 etap
+    Vector<double> results(n);
+    for (int i = n - 1; i >= 0; --i) {
+        results[i] = matrix[i][n] / matrix[i][i];
+        for (int j = i - 1; j >= 0; --j) {
+            matrix[j][n] -= matrix[j][i] * results[i];
+        }
+    }
+
+    return results;
+}
+
+Matrix<double> scalMacierz(Matrix<double> a, Vector<double> b) {
+    Matrix<double> matrix;
+    for (int i = 0; i < a.size(); i++) {
+        matrix.push_back(a[i]);
+        matrix[i].push_back(b[i]);
+    }
+    return matrix;
+}
+
+
 void aggregateMatrixH(const Grid& grid, GlobalSystemOfEquation& globalSystemOfEquation) {
     int size = grid.nodes_number;
-    std::vector<std::vector<double>> globalMatrixH (size, std::vector<double>(size, 0));    //matrix size x size
+    Matrix<double> globalMatrixH (size, Vector<double>(size, 0));    //matrix size x size
 
     for (int i = 0; i < grid.elements.size(); i++) {
-        std::vector<std::vector<double>> localMatrixH = grid.elements[i].H;
+        Matrix<double> localMatrixH = grid.elements[i].H;
 
         int node_ids[4];
         for (int j = 0; j < 4; ++j) {

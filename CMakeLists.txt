@@ -20,5 +20,4 @@ add_executable(FEM_Project main.cpp
         includes.h
         GlobalSystemOfEquation.cpp
         GlobalSystemOfEquation.h
-        Elem2d_4.cpp
-        Elem2d_4.h)
+)

@@ -9,10 +9,18 @@
 
 class GlobalSystemOfEquation {
 public:
-    std::vector<std::vector<double>> globalMatrixH;
+    Matrix<double> globalMatrixH;
+    Vector<double> globalVectorP;
+    Vector<double> vectorT;
+
+    void solve();
 
     void displayMatrixH();
 };
+
+bool zeroOnDiagonal(Matrix<double> matrix);
+Vector <double> GaussElimination(Matrix<double> matrix);
+Matrix<double> scalMacierz(Matrix<double> a, Vector<double> b);
 
 void aggregateMatrixH(const Grid&  grid, GlobalSystemOfEquation& globalSystemOfEquation);
 

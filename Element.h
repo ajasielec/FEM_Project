@@ -22,13 +22,14 @@ struct Element {
 
     void calculateJakobians(Grid& grid);
     void calculateShapeDerivatives(int npc);
-    void calculateMatrixH(int npc, int k, Grid& grid);
+    void calculateMatrixH(Grid& grid);
     void calculateVectorP(int npc, Grid& grid);
 
     void display() const;
     void display_dN_dx() const;
     void display_dN_dy() const;
     void display_H() const;
+    void display_P() const;
 
 };
 

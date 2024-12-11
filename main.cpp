@@ -362,11 +362,17 @@ int main() {
 	// H agregation
 	GlobalSystemOfEquation global_system_of_equation;
 	aggregateMatrixH(grid4x4, global_system_of_equation);
+	aggregateVectorP(grid4x4, global_system_of_equation);
 
 	// diplay global h
 	std::cout << std::fixed << std::setprecision(3);
 	std::cout << "\n\nGLOBAL H:" << std::endl;
 	global_system_of_equation.displayMatrixH();
+
+	// display global vector P
+	std::cout << std::fixed << std::setprecision(3);
+	std::cout << "\n\nGLOBAL H:" << std::endl;
+	global_system_of_equation.displayVectorP();
 
 	//---------------------------------------------------------------------//
 	// LAB 9 - calculating vector P (1xliczba wezlow) and its agregation
@@ -378,6 +384,31 @@ int main() {
 	// rozwiazac uklad rownan [H]{t} = - {P}
 
 
+	std::cout << "MIX GRID 4X4 TEST:" << std::endl;
+	Grid mix_grid = readFromFile("grids\\Test2_4_4_MixGrid.txt");
+	mix_grid.npc = 4;
+
+	calculateH(mix_grid);
+
+	// displaying all vectors P
+	// std::cout << "\n\nVECTORS P:" << std::endl;
+	// for (auto& element : mix_grid.elements) {
+	// 	element.display_P();
+	// }
+
+	// H and P agregation
+	aggregateMatrixH(mix_grid, global_system_of_equation);
+	aggregateVectorP(mix_grid, global_system_of_equation);
+
+	// diplay global h
+	std::cout << std::fixed << std::setprecision(3);
+	std::cout << "\n\nGLOBAL H:" << std::endl;
+	global_system_of_equation.displayMatrixH();
+
+	// display global vector P
+	std::cout << std::fixed << std::setprecision(3);
+	std::cout << "\n\nGLOBAL H:" << std::endl;
+	global_system_of_equation.displayVectorP();
 
 
 

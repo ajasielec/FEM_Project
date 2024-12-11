@@ -16,6 +16,7 @@ public:
     void solve();
 
     void displayMatrixH();
+    void displayVectorP();
 };
 
 bool zeroOnDiagonal(Matrix<double> matrix);
@@ -23,6 +24,7 @@ Vector <double> GaussElimination(Matrix<double> matrix);
 Matrix<double> scalMacierz(Matrix<double> a, Vector<double> b);
 
 void aggregateMatrixH(const Grid&  grid, GlobalSystemOfEquation& globalSystemOfEquation);
+void aggregateVectorP(const Grid&  grid, GlobalSystemOfEquation& globalSystemOfEquation);
 
 
 

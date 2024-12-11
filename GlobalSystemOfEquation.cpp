@@ -27,6 +27,12 @@ void GlobalSystemOfEquation::displayMatrixH() {
     }
 }
 
+void GlobalSystemOfEquation::displayVectorP() {
+    for (int i = 0; i < globalVectorP.size(); i++) {
+        std::cout << globalVectorP[i] << std::endl;
+    }
+}
+
 // function to gauss elimination
 bool zeroOnDiagonal(Matrix<double> matrix) {
     for (int i = 0; i < matrix.size(); i++) {
@@ -93,4 +99,23 @@ void aggregateMatrixH(const Grid& grid, GlobalSystemOfEquation& globalSystemOfEq
     }
 
     globalSystemOfEquation.globalMatrixH = globalMatrixH;
+}
+
+void aggregateVectorP(const Grid &grid, GlobalSystemOfEquation &globalSystemOfEquation) {
+    int size = grid.nodes_number;
+    Vector<double> globalVectorP(size, 0.0);
+
+    for (auto& element : grid.elements) {
+        Vector<double> local_P = element.P;
+        int node_ids[4];
+
+        for (int j = 0; j < 4; ++j) {
+            node_ids[j] = element.node_id[j];
+        }
+
+        for (int j = 0; j < 4; ++j) {
+                globalVectorP[node_ids[j] - 1] += local_P[j];
+        }
+    }
+    globalSystemOfEquation.globalVectorP = globalVectorP;
 }

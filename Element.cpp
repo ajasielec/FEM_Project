@@ -90,9 +90,7 @@ void Element::calculateMatrixH(int npc, int conductivity, Grid& grid) {
         for (int j = 0; j < 4; j++) {
             for (int k = 0; k < 4; k++) {
                 H[j][k] += jakobians[i].detJ * conductivity * (dNdx[j] * dNdx[k] + dNdy[j] * dNdy[k]) * current_wages[i].x * current_wages[i].y;
-                // std::cout << H[j][k] <<"\t";
             }
-            // std::cout << std::endl;
         }
     }
 
@@ -111,63 +109,25 @@ void Element::calculateMatrixH(int npc, int conductivity, Grid& grid) {
         }
     }
 
-
-    // // displaying N table
-    // std::cout << "\nN TABLE TEST:" << std::endl;
-    // for (int i = 0; i < sqrt(npc); i++) {
-    //     for (int j = 0; j < 4; j++) {
-    //         std::cout << elem_univ.surface[3].N[i][j] << " ";
-    //     }
-    //     std::cout << std::endl;
-    // }
-
-
-    // // adding hbc to H
-    // for (int h = 0; h < 4; h++) {
-    //     // checking if node is boundary
-    //     Node node = grid.findNodeById(this->node_id[h]);
-    //     // std::cout << node.BC << std::endl;
-    //     if (node.BC) {
-    //         for (int i = 0; i < sqrt(npc); i++) {
-    //             for (int j = 0; j < 4; j++) {
-    //                 for (int k = 0; k < 4; k++) {
-    //                     H[j][k] += 0.0125 * conductivity * (elem_univ.surface[h].N[i][j] * elem_univ.surface[h].N[i][k]) * 1;
-    //                 }
-    //                 //std::cout << std::endl;
-    //             }
-    //         }
-    //     }
-    // }
-    std::cout << "\nELEMENT: " << id << std::endl;
-
     // calculating Hbc on each side
     Matrix<double> Hbc(4, Vector<double>(4, 0.0));
-    // up
+
+    // down
     Node node1 = grid.findNodeById(this->node_id[0]);
     Node node2 = grid.findNodeById(this->node_id[1]);
     if (node1.BC && node2.BC) {
         Matrix<double> Hbc_up(4, Vector<double>(4, 0.0));
         double det_up = (node1.x - node2.x) / 2;
-        std::cout << "KURWA = " << current_wages[0].x << std::endl;
         for (int i = 0; i < sqrt(npc); i++) {
             for (int j = 0; j < 4; j++) {
                 for (int k = 0; k < 4; k++) {
-                    Hbc_up[j][k] += det_up * alpha * (elem_univ.surface[0].N[i][j] * elem_univ.surface[0].N[i][k]) * current_wages[0].x;
+                    H[j][k] += det_up * alpha * (elem_univ.surface[0].N[i][j] * elem_univ.surface[0].N[i][k]) * current_wages[0].x;
                 }
             }
         }
-        // DEBUG
-        std::cout << "\nHBC UP" << std::endl;
-        for (int i = 0; i < 4; i++) {
-            for (int j = 0; j < 4; j++) {
-                Hbc[i][j] += Hbc_up[i][j];
-                std::cout << Hbc[i][j] << "\t";
-            }
-            std::cout << std::endl;
-        }
     }
 
-    // left
+    // right
     node1 = grid.findNodeById(this->node_id[1]);
     node2 = grid.findNodeById(this->node_id[2]);
     if (node1.BC && node2.BC) {
@@ -176,22 +136,13 @@ void Element::calculateMatrixH(int npc, int conductivity, Grid& grid) {
         for (int i = 0; i < sqrt(npc); i++) {
             for (int j = 0; j < 4; j++) {
                 for (int k = 0; k < 4; k++) {
-                    Hbc_left[j][k] += det_left * alpha * (elem_univ.surface[1].N[i][j] * elem_univ.surface[1].N[i][k]) * current_wages[1].x;
+                    H[j][k] += det_left * alpha * (elem_univ.surface[1].N[i][j] * elem_univ.surface[1].N[i][k]) * current_wages[1].x;
                 }
             }
         }
-        // DEBUG
-        std::cout << "\nHBC LEFT" << std::endl;
-        for (int i = 0; i < 4; i++) {
-            for (int j = 0; j < 4; j++) {
-                Hbc[i][j] += Hbc_left[i][j];
-                std::cout << Hbc_left[i][j] << "\t";
-            }
-            std::cout << std::endl;
-        }
     }
 
-    // down
+    // up
     node1 = grid.findNodeById(this->node_id[2]);
     node2 = grid.findNodeById(this->node_id[3]);
     if (node1.BC && node2.BC) {
@@ -200,22 +151,13 @@ void Element::calculateMatrixH(int npc, int conductivity, Grid& grid) {
         for (int i = 0; i < sqrt(npc); i++) {
             for (int j = 0; j < 4; j++) {
                 for (int k = 0; k < 4; k++) {
-                    Hbc_down[j][k] += det_down * alpha * (elem_univ.surface[2].N[i][j] * elem_univ.surface[2].N[i][k]) * current_wages[1].x;
+                    H[j][k] += det_down * alpha * (elem_univ.surface[2].N[i][j] * elem_univ.surface[2].N[i][k]) * current_wages[1].x;
                 }
             }
         }
-        // DEBUG
-        std::cout << "\nHBC DOWN" << std::endl;
-        for (int i = 0; i < 4; i++) {
-            for (int j = 0; j < 4; j++) {
-                Hbc[i][j] += Hbc_down[i][j];
-                std::cout << Hbc_down[i][j] << "\t";
-            }
-            std::cout << std::endl;
-        }
     }
 
-    // right
+    // left
     node1 = grid.findNodeById(this->node_id[3]);
     node2 = grid.findNodeById(this->node_id[0]);
     if (node1.BC && node2.BC) {
@@ -224,29 +166,10 @@ void Element::calculateMatrixH(int npc, int conductivity, Grid& grid) {
         for (int i = 0; i < sqrt(npc); i++) {
             for (int j = 0; j < 4; j++) {
                 for (int k = 0; k < 4; k++) {
-                    Hbc_right[j][k] += det_right * alpha * (elem_univ.surface[3].N[i][j] * elem_univ.surface[3].N[i][k]) * current_wages[1].x;
+                    H[j][k] += det_right * alpha * (elem_univ.surface[3].N[i][j] * elem_univ.surface[3].N[i][k]) * current_wages[1].x;
                 }
             }
         }
-        // DEBUG
-        std::cout << "\nHBC RIGHT" << std::endl;
-        for (int i = 0; i < 4; i++) {
-            for (int j = 0; j < 4; j++) {
-                Hbc[i][j] += Hbc_right[i][j];
-                std::cout << Hbc[i][j] << "\t";
-            }
-            std::cout << std::endl;
-        }
-    }
-
-    // adding hbc to h
-    std::cout << "adding Hbc to H..." << std::endl;
-    for (int i = 0; i < 4; i++) {
-        for (int j = 0; j < 4; j++) {
-            H[i][j] += Hbc[i][j];
-            std::cout << H[i][j] << "\t";
-        }
-        std::cout << std::endl;
     }
 
     this->H = H;

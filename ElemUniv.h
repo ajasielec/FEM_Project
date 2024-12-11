@@ -36,12 +36,12 @@ const Matrix<Node> rightSide {
 };
 const Matrix<Node> upSide {
                     {Node(0.0, 1.0)},
-                    {Node(-1/sqrt(3), 1.0), Node(1/sqrt(3), 1.0)}     // npc = 2
+                    {Node(1/sqrt(3), 1.0), Node(-1/sqrt(3), 1.0)}     // npc = 2
 
 };
 const Matrix<Node> leftSide {
                     {Node(-1.0, 0.0)},        // npc = 1
-                    {Node(-1.0, -1/sqrt(3)), Node(-1.0, 1/sqrt(3))}     // npc = 2
+                    {Node(-1.0, 1/sqrt(3)), Node(-1.0, -1/sqrt(3))}     // npc = 2
 };
 
 

@@ -135,6 +135,7 @@ int main() {
 	//
 
 
+	//---------------------------------------------------------------------//
 	// // LAB 2 - GAUSS QUADRATURES METHOD
 	//
 	// std::cout << "\n\nIntegration using Gauss quadratures method." << std::endl;
@@ -161,6 +162,8 @@ int main() {
 	// }
 	// // std::cout << "\tAccurate result: " << 26.222222222222222222222222222222 << std::endl;
 
+
+	//---------------------------------------------------------------------//
 	// LAB 3 - JAKOBIAN / LAB 4, 5 - MATRIX H
 
 	// // test element
@@ -236,6 +239,7 @@ int main() {
 	// mygrid.elements[2].display_H();
 
 
+	//---------------------------------------------------------------------//
 	// LAB 6 - testing grids from file
 	// reading grid from file
 	// std::cout << "\n\nTEST - grid 4x4:";
@@ -262,6 +266,7 @@ int main() {
 	// grid2.displayAllMatrixH();
 
 
+	//---------------------------------------------------------------------//
 	// LAB7 - MATRIX H AGGREGATION
 
 	// TEST 1
@@ -290,6 +295,7 @@ int main() {
 	// std::cout << "\n\nGLOBAL H:" << std::endl;
 	// global_system_of_equation.displayMatrixH();
 
+	//---------------------------------------------------------------------//
 	// LAB 8 - przeczytanie wezlow z pliku - dodac bool do node (1 - jeste brzegowy, 0 - nie jest na brzegu)
 	// warunek brzegowy gdy 2 wezly na brzegu (z flaga 1)
 	// wyznaczenie w strukturze elementu drugiego schematu calkowania ktory dotyczy TYLKO calkowania na powierzchni
@@ -364,6 +370,18 @@ int main() {
 	std::cout << std::fixed << std::setprecision(3);
 	std::cout << "\n\nGLOBAL H:" << std::endl;
 	global_system_of_equation.displayMatrixH();
+
+	//---------------------------------------------------------------------//
+	// LAB 9 - calculating vector P (1xliczba wezlow) and its agregation
+	// dodac wektor globalny P do struktury rozw. ukladu rownan
+	// dodac metode do rozwiazywania ukladu rownac (jakis gauss) - raczej nie zadziala to co mam
+	// stworzyc wektor P[4] w struct elementu
+	// policzy wektory P dla kazdego elementu
+	// zagregowac
+	// rozwiazac uklad rownan [H]{t} = - {P}
+
+
+
 
 
 	return 0;

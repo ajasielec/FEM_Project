@@ -371,8 +371,13 @@ int main() {
 
 	// display global vector P
 	std::cout << std::fixed << std::setprecision(3);
-	std::cout << "\n\nGLOBAL H:" << std::endl;
+	std::cout << "\n\nVECTOR P:" << std::endl;
 	global_system_of_equation.displayVectorP();
+
+	// solve equation
+	global_system_of_equation.solve();
+	std::cout << "\n\nVECTOR T:" << std::endl;
+	global_system_of_equation.displayVectorT();
 
 	//---------------------------------------------------------------------//
 	// LAB 9 - calculating vector P (1xliczba wezlow) and its agregation
@@ -384,7 +389,7 @@ int main() {
 	// rozwiazac uklad rownan [H]{t} = - {P}
 
 
-	std::cout << "MIX GRID 4X4 TEST:" << std::endl;
+	std::cout << "\n\nMIX GRID 4X4 TEST:" << std::endl;
 	Grid mix_grid = readFromFile("grids\\Test2_4_4_MixGrid.txt");
 	mix_grid.npc = 4;
 
@@ -407,11 +412,13 @@ int main() {
 
 	// display global vector P
 	std::cout << std::fixed << std::setprecision(3);
-	std::cout << "\n\nGLOBAL H:" << std::endl;
+	std::cout << "\n\nVECTOR P:" << std::endl;
 	global_system_of_equation.displayVectorP();
 
-
-
+	// solve equation
+	global_system_of_equation.solve();
+	std::cout << "\n\nVECTOR T:" << std::endl;
+	global_system_of_equation.displayVectorT();
 
 	return 0;
 }

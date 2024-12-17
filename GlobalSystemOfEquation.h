@@ -17,10 +17,11 @@ public:
 
     void displayMatrixH();
     void displayVectorP();
+    void displayVectorT();
 };
 
 bool zeroOnDiagonal(Matrix<double> matrix);
-Vector <double> GaussElimination(Matrix<double> matrix);
+Vector <double> gaussElimination(Matrix<double> H, Vector<double> P);
 Matrix<double> scalMacierz(Matrix<double> a, Vector<double> b);
 
 void aggregateMatrixH(const Grid&  grid, GlobalSystemOfEquation& globalSystemOfEquation);

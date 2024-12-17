@@ -118,11 +118,11 @@ void Element::calculateMatrixH(Grid& grid) {
     // calculating Hbc on each side
     Matrix<double> Hbc(4, Vector<double>(4, 0.0));
 
+
     // down
     Node node1 = grid.findNodeById(this->node_id[0]);
     Node node2 = grid.findNodeById(this->node_id[1]);
     if (node1.BC && node2.BC) {
-        Matrix<double> Hbc_up(4, Vector<double>(4, 0.0));
         double det_up = (node1.x - node2.x) / 2;
         for (int i = 0; i < sqrt(npc); i++) {
             for (int j = 0; j < 4; j++) {
@@ -138,7 +138,6 @@ void Element::calculateMatrixH(Grid& grid) {
     node1 = grid.findNodeById(this->node_id[1]);
     node2 = grid.findNodeById(this->node_id[2]);
     if (node1.BC && node2.BC) {
-        Matrix<double> Hbc_left(4, Vector<double>(4, 0.0));
         double det_left = (node1.y - node2.y) / 2;
         for (int i = 0; i < sqrt(npc); i++) {
             for (int j = 0; j < 4; j++) {
@@ -154,14 +153,13 @@ void Element::calculateMatrixH(Grid& grid) {
     node1 = grid.findNodeById(this->node_id[2]);
     node2 = grid.findNodeById(this->node_id[3]);
     if (node1.BC && node2.BC) {
-        Matrix<double> Hbc_down(4, Vector<double>(4, 0.0));
         double det_down = (node2.x - node1.x) / 2;
         for (int i = 0; i < sqrt(npc); i++) {
             for (int j = 0; j < 4; j++) {
                 for (int k = 0; k < 4; k++) {
-                    H[j][k] += det_down * alpha * (elem_univ.surface[2].N[i][j] * elem_univ.surface[2].N[i][k]) * current_wages[1].x;
+                    H[j][k] += det_down * alpha * (elem_univ.surface[2].N[i][j] * elem_univ.surface[2].N[i][k]) * current_wages[2].x;
                 }
-                P[j] += det_down * alpha * ambient_temp * elem_univ.surface[2].N[i][j] * current_wages[1].x;
+                P[j] += det_down * alpha * ambient_temp * elem_univ.surface[2].N[i][j] * current_wages[2].x;
             }
         }
     }
@@ -170,24 +168,19 @@ void Element::calculateMatrixH(Grid& grid) {
     node1 = grid.findNodeById(this->node_id[3]);
     node2 = grid.findNodeById(this->node_id[0]);
     if (node1.BC && node2.BC) {
-        Matrix<double> Hbc_right(4, Vector<double>(4, 0.0));
         double det_right = (node2.y - node1.y) / 2;
         for (int i = 0; i < sqrt(npc); i++) {
             for (int j = 0; j < 4; j++) {
                 for (int k = 0; k < 4; k++) {
-                    H[j][k] += det_right * alpha * (elem_univ.surface[3].N[i][j] * elem_univ.surface[3].N[i][k]) * current_wages[1].x;
+                    H[j][k] += det_right * alpha * (elem_univ.surface[3].N[i][j] * elem_univ.surface[3].N[i][k]) * current_wages[3].x;
                 }
-                P[j] += det_right * alpha * ambient_temp * elem_univ.surface[3].N[i][j] * current_wages[1].x;
+                P[j] += det_right * alpha * ambient_temp * elem_univ.surface[3].N[i][j] * current_wages[3].x;
             }
         }
     }
 
     this->H = H;
     this->P = P;
-
-    //DEBUG
-    // std::cout << "VECTOR P:" << std::endl;
-    display_P();
 }
 
 // calculating vector P

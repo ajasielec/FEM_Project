@@ -8,14 +8,7 @@
 
 void GlobalSystemOfEquation::solve() {
     // metoda gaussa
-    Matrix<double> matrix;
-    matrix = scalMacierz(globalMatrixH, globalVectorP);
-
-    if(zeroOnDiagonal(globalMatrixH)) {
-        std::cout << "Obliczenia niemozliwe - zera na przekatnej!" << std::endl;
-    } else {
-        vectorT = GaussElimination(matrix);
-    }
+    vectorT = gaussElimination(globalMatrixH, globalVectorP);
 }
 
 void GlobalSystemOfEquation::displayMatrixH() {
@@ -29,53 +22,57 @@ void GlobalSystemOfEquation::displayMatrixH() {
 
 void GlobalSystemOfEquation::displayVectorP() {
     for (int i = 0; i < globalVectorP.size(); i++) {
-        std::cout << globalVectorP[i] << std::endl;
+        std::cout << globalVectorP[i] << " ";
     }
+    std::cout << std::endl;
 }
 
-// function to gauss elimination
-bool zeroOnDiagonal(Matrix<double> matrix) {
-    for (int i = 0; i < matrix.size(); i++) {
-        if (matrix[i][i] == 0) return true;
+void GlobalSystemOfEquation::displayVectorT() {
+    for (int i = 0; i < vectorT.size(); i++) {
+        std::cout << vectorT[i] << " ";
     }
-    return false;
+    std::cout << std::endl;
 }
 
-Vector <double> GaussElimination(Matrix<double> matrix) {
-    // 1 etap
-    int n = matrix.size();
-    double m = 0;
-    for (int z = 0; z < n; z++) {
-        for (int i = z + 1; i < n; i++) {
-            m = matrix[i][z] / matrix[z][z];
-            for (int j = 0; j < n + 1; j++) {
-                matrix[i][j] -= (matrix[z][j] * m);
-                if (abs(matrix[i][j]) < SMALL_NUMBER) {
-                    matrix[i][j] = 0;
+Vector<double> gaussElimination(Matrix<double> H, Vector<double> P) {
+    int n = H.size();
+    Vector t(n, 0.0);
+
+    for (int i = 0; i < n; i++) {
+        // Szukanie maksymalnego elementu w kolumnie
+        int maxRow = i;
+        for (int k = i + 1; k < n; k++) {
+            if (abs(H[k][i]) > abs(H[maxRow][i]))
+                maxRow = k;
+        }
+
+        // Zamiana wierszy
+        std::swap(H[i], H[maxRow]);
+        std::swap(P[i], P[maxRow]);
+
+        // Normalizacja wiersza
+        for (int k = i + 1; k < n; k++) {
+            double c = -H[k][i] / H[i][i];
+            for (int j = i; j < n; j++) {
+                if (i == j) {
+                    H[k][j] = 0;
+                } else {
+                    H[k][j] += c * H[i][j];
                 }
             }
+            P[k] += c * P[i];
         }
     }
 
-    // 2 etap
-    Vector<double> results(n);
-    for (int i = n - 1; i >= 0; --i) {
-        results[i] = matrix[i][n] / matrix[i][i];
-        for (int j = i - 1; j >= 0; --j) {
-            matrix[j][n] -= matrix[j][i] * results[i];
+    // Rozwiązanie układu poprzez podstawienie wsteczne
+    for (int i = n - 1; i >= 0; i--) {
+        t[i] = P[i] / H[i][i];
+        for (int k = i - 1; k >= 0; k--) {
+            P[k] -= H[k][i] * t[i];
         }
     }
 
-    return results;
-}
-
-Matrix<double> scalMacierz(Matrix<double> a, Vector<double> b) {
-    Matrix<double> matrix;
-    for (int i = 0; i < a.size(); i++) {
-        matrix.push_back(a[i]);
-        matrix[i].push_back(b[i]);
-    }
-    return matrix;
+    return t;
 }
 
 

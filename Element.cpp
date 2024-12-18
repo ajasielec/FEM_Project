@@ -205,7 +205,7 @@ void Element::calculateMatrixH(Grid& grid) {
         N.push_back(row);
     }
 
-    // std::cout << "N TABLBE: " << std::endl;
+    // std::cout << "N TABLE: " << std::endl;
     // for (int i = 0; i < npc; i++) {
     //     for (int j = 0; j < 4; j++) {
     //         std::cout << N[i][j] << " ";
@@ -214,13 +214,12 @@ void Element::calculateMatrixH(Grid& grid) {
     // }
 
     // c:
-
     for (int i = 0; i < npc; i++) {
         double detJ = jakobians[i].detJ / 2;
         std::vector<double> dNdx = N[i];
         std::vector<double> dNdy = N[i];
 
-        // calculating H matrix elements for the whole element
+        // calculating C matrix elements for the whole element
         for (int j = 0; j < 4; j++) {
             for (int k = 0; k < 4; k++) {
                 C[j][k] += c * ro * detJ * (dNdx[j] * dNdx[k] + dNdy[j] * dNdy[k]) * current_wages[i].x * current_wages[i].y;
@@ -232,11 +231,6 @@ void Element::calculateMatrixH(Grid& grid) {
     this->C = C;
     this->H = H;
     this->P = P;
-}
-
-// calculating vector P
-void Element::calculateVectorP(int npc, Grid &grid) {
-
 }
 
 

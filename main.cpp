@@ -85,13 +85,15 @@ Grid readFromFile(const std::string& path) {
 		}
 	}
 
-	// set the BC flag for nodes
+	// set the BC flag for nodes and start temperature
 	for (auto& node : grid.nodes) {
 		if (bcNodes.find(node.id) != bcNodes.end()) {
 			node.BC = true;
 		} else {
 			node.BC = false;
 		}
+
+		node.temp = grid.globalData["InitialTemp"];
 	}
 
 	return grid;
@@ -452,7 +454,9 @@ int main() {
 	aggregate(grid4x4, SOE);
 	std::cout << "\nGLOBAL MATRIX C" << std::endl;
 	SOE.displayMatrixC();
+	SOE.displayVectorP();
 
+	// rozwiazanie ukladu rownan
 
 
 

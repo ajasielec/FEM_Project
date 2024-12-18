@@ -7,6 +7,7 @@ struct Node {
     int id;
     double x, y;
     bool BC;
+    double temp;
 
     Node();
     Node(double x, double y);

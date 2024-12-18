@@ -14,6 +14,7 @@ struct Element {
     Matrix<double> dN_dx;   // table dN/dx
     Matrix<double> dN_dy;   // table dN/dy
     Matrix<double> H;       // H matrix
+    Matrix<double> C;       // C matrix
     Matrix<double> Hbc;     // Hbc matrix
     Vector<double> P;       // vector P
 
@@ -29,6 +30,7 @@ struct Element {
     void display_dN_dx() const;
     void display_dN_dy() const;
     void display_H() const;
+    void display_C() const;
     void display_P() const;
 
 };

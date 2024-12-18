@@ -346,38 +346,38 @@ int main() {
 	//
 	// mygrid.displayAllMatrixH();
 
-	// grid 4x4 test
-	std::cout << "GRID 4X4 TEST:" << std::endl;
-	Grid grid4x4 = readFromFile("grids\\Test1_4_4.txt");
-	grid4x4.npc = 4;
-
-	// grid4x4.displayNodes();
-	// grid4x4.displayElements();
-
-	calculateH(grid4x4);
-
-	// displaying all H
-	// grid4x4.displayAllMatrixH();
-
-	// H agregation
-	GlobalSystemOfEquation global_system_of_equation;
-	aggregateMatrixH(grid4x4, global_system_of_equation);
-	aggregateVectorP(grid4x4, global_system_of_equation);
-
-	// diplay global h
-	std::cout << std::fixed << std::setprecision(3);
-	std::cout << "\n\nGLOBAL H:" << std::endl;
-	global_system_of_equation.displayMatrixH();
-
-	// display global vector P
-	std::cout << std::fixed << std::setprecision(3);
-	std::cout << "\n\nVECTOR P:" << std::endl;
-	global_system_of_equation.displayVectorP();
-
-	// solve equation
-	global_system_of_equation.solve();
-	std::cout << "\n\nVECTOR T:" << std::endl;
-	global_system_of_equation.displayVectorT();
+	// // grid 4x4 test
+	// std::cout << "GRID 4X4 TEST:" << std::endl;
+	// Grid grid4x4 = readFromFile("grids\\Test1_4_4.txt");
+	// grid4x4.npc = 4;
+	//
+	// // grid4x4.displayNodes();
+	// // grid4x4.displayElements();
+	//
+	// calculateH(grid4x4);
+	//
+	// // displaying all H
+	// // grid4x4.displayAllMatrixH();
+	//
+	// // H agregation
+	// GlobalSystemOfEquation global_system_of_equation;
+	// aggregateMatrixH(grid4x4, global_system_of_equation);
+	// aggregateVectorP(grid4x4, global_system_of_equation);
+	//
+	// // diplay global h
+	// std::cout << std::fixed << std::setprecision(3);
+	// std::cout << "\n\nGLOBAL H:" << std::endl;
+	// global_system_of_equation.displayMatrixH();
+	//
+	// // display global vector P
+	// std::cout << std::fixed << std::setprecision(3);
+	// std::cout << "\n\nVECTOR P:" << std::endl;
+	// global_system_of_equation.displayVectorP();
+	//
+	// // solve equation
+	// global_system_of_equation.solve();
+	// std::cout << "\n\nVECTOR T:" << std::endl;
+	// global_system_of_equation.displayVectorT();
 
 	//---------------------------------------------------------------------//
 	// LAB 9 - calculating vector P (1xliczba wezlow) and its agregation
@@ -389,36 +389,72 @@ int main() {
 	// rozwiazac uklad rownan [H]{t} = - {P}
 
 
-	std::cout << "\n\nMIX GRID 4X4 TEST:" << std::endl;
-	Grid mix_grid = readFromFile("grids\\Test2_4_4_MixGrid.txt");
-	mix_grid.npc = 4;
+	// std::cout << "\n\nMIX GRID 4X4 TEST:" << std::endl;
+	// Grid mix_grid = readFromFile("grids\\Test2_4_4_MixGrid.txt");
+	// mix_grid.npc = 4;
+	//
+	// calculateH(mix_grid);
+	//
+	// // displaying all vectors P
+	// // std::cout << "\n\nVECTORS P:" << std::endl;
+	// // for (auto& element : mix_grid.elements) {
+	// // 	element.display_P();
+	// // }
+	//
+	// // H and P agregation
+	// aggregateMatrixH(mix_grid, global_system_of_equation);
+	// aggregateVectorP(mix_grid, global_system_of_equation);
+	//
+	// // diplay global h
+	// std::cout << std::fixed << std::setprecision(3);
+	// std::cout << "\n\nGLOBAL H:" << std::endl;
+	// global_system_of_equation.displayMatrixH();
+	//
+	// // display global vector P
+	// std::cout << std::fixed << std::setprecision(3);
+	// std::cout << "\n\nVECTOR P:" << std::endl;
+	// global_system_of_equation.displayVectorP();
+	//
+	// // solve equation
+	// global_system_of_equation.solve();
+	// std::cout << "\n\nVECTOR T:" << std::endl;
+	// global_system_of_equation.displayVectorT();
 
-	calculateH(mix_grid);
+	//---------------------------------------------------------------------//
+	// LAB 10 - calculating matrix C
+	//1. w elem policzyc wartosci funkcji ksztaltu w punktach calkowania
+	// robimy macierze C w kazdym punkcie i sumujemy
+	// bez petli po czasie
+	// w strukt wezla dodac temperature
+	// czytajac z pliku temp poczatkowej przypisujemy temp poczatkowa do kazdego wezla
+	// rozwiazujemy uklad rownan
+	// delta tau to step time w pliku
+	// t0 podmieniamy na t1 w wezlach (w 1 iteracji itd)
+	// iteraCJe = sim time/step time
 
-	// displaying all vectors P
-	// std::cout << "\n\nVECTORS P:" << std::endl;
-	// for (auto& element : mix_grid.elements) {
-	// 	element.display_P();
-	// }
+	// grid 4x4 test
+	std::cout << "GRID 4X4 TEST:" << std::endl;
+	Grid grid4x4 = readFromFile("grids\\Test1_4_4.txt");
+	grid4x4.npc = 4;
 
-	// H and P agregation
-	aggregateMatrixH(mix_grid, global_system_of_equation);
-	aggregateVectorP(mix_grid, global_system_of_equation);
+	// grid4x4.displayNodes();
+	// grid4x4.displayElements();
 
-	// diplay global h
-	std::cout << std::fixed << std::setprecision(3);
-	std::cout << "\n\nGLOBAL H:" << std::endl;
-	global_system_of_equation.displayMatrixH();
+	calculateH(grid4x4);
 
-	// display global vector P
-	std::cout << std::fixed << std::setprecision(3);
-	std::cout << "\n\nVECTOR P:" << std::endl;
-	global_system_of_equation.displayVectorP();
+	for (auto& element : grid4x4.elements) {
+		//element.display_dN_dy();
+		element.display_C();
+	}
 
-	// solve equation
-	global_system_of_equation.solve();
-	std::cout << "\n\nVECTOR T:" << std::endl;
-	global_system_of_equation.displayVectorT();
+	// agregation
+	GlobalSystemOfEquation SOE;
+	aggregate(grid4x4, SOE);
+	std::cout << "\nGLOBAL MATRIX C" << std::endl;
+	SOE.displayMatrixC();
+
+
+
 
 	return 0;
 }

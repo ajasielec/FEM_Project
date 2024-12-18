@@ -20,6 +20,15 @@ void GlobalSystemOfEquation::displayMatrixH() {
     }
 }
 
+void GlobalSystemOfEquation::displayMatrixC() {
+    for (int i = 0; i < globalMatrixC.size(); i++) {
+        for (int j = 0; j < globalMatrixC[i].size(); j++) {
+            std::cout << globalMatrixC[i][j] << " ";
+        }
+        std::cout << std::endl;
+    }
+}
+
 void GlobalSystemOfEquation::displayVectorP() {
     for (int i = 0; i < globalVectorP.size(); i++) {
         std::cout << globalVectorP[i] << " ";
@@ -76,12 +85,58 @@ Vector<double> gaussElimination(Matrix<double> H, Vector<double> P) {
 }
 
 
-void aggregateMatrixH(const Grid& grid, GlobalSystemOfEquation& globalSystemOfEquation) {
+// void aggregateMatrixH(const Grid& grid, GlobalSystemOfEquation& globalSystemOfEquation) {
+//     int size = grid.nodes_number;
+//     Matrix<double> globalMatrixH (size, Vector<double>(size, 0));    //matrix size x size
+//
+//     for (int i = 0; i < grid.elements.size(); i++) {
+//         Matrix<double> localMatrixH = grid.elements[i].H;
+//
+//         int node_ids[4];
+//         for (int j = 0; j < 4; ++j) {
+//             node_ids[j] = grid.elements[i].node_id[j];
+//         }
+//
+//         for (int j = 0; j < 4; ++j) {
+//             for (int k = 0; k < 4; ++k) {
+//                 globalMatrixH[node_ids[j]-1][node_ids[k]-1] += localMatrixH[j][k];
+//             }
+//         }
+//     }
+//
+//     globalSystemOfEquation.globalMatrixH = globalMatrixH;
+// }
+//
+// void aggregateVectorP(const Grid &grid, GlobalSystemOfEquation &globalSystemOfEquation) {
+//     int size = grid.nodes_number;
+//     Vector<double> globalVectorP(size, 0.0);
+//
+//     for (auto& element : grid.elements) {
+//         Vector<double> local_P = element.P;
+//         int node_ids[4];
+//
+//         for (int j = 0; j < 4; ++j) {
+//             node_ids[j] = element.node_id[j];
+//         }
+//
+//         for (int j = 0; j < 4; ++j) {
+//                 globalVectorP[node_ids[j] - 1] += local_P[j];
+//         }
+//     }
+//     globalSystemOfEquation.globalVectorP = globalVectorP;
+// }
+
+void aggregate(const Grid &grid, GlobalSystemOfEquation &globalSystemOfEquation) {
+
     int size = grid.nodes_number;
     Matrix<double> globalMatrixH (size, Vector<double>(size, 0));    //matrix size x size
+    Matrix<double> globalMatrixC (size, Vector<double>(size, 0));    //matrix size x size
+    Vector<double> globalVectorP(size, 0.0);
 
     for (int i = 0; i < grid.elements.size(); i++) {
         Matrix<double> localMatrixH = grid.elements[i].H;
+        Matrix<double> localMatrixC = grid.elements[i].C;
+        Vector<double> local_P = grid.elements[i].P;
 
         int node_ids[4];
         for (int j = 0; j < 4; ++j) {
@@ -91,28 +146,13 @@ void aggregateMatrixH(const Grid& grid, GlobalSystemOfEquation& globalSystemOfEq
         for (int j = 0; j < 4; ++j) {
             for (int k = 0; k < 4; ++k) {
                 globalMatrixH[node_ids[j]-1][node_ids[k]-1] += localMatrixH[j][k];
+                globalMatrixC[node_ids[j]-1][node_ids[k]-1] += localMatrixC[j][k];
             }
+            globalVectorP[node_ids[j] - 1] += local_P[j];
         }
     }
 
     globalSystemOfEquation.globalMatrixH = globalMatrixH;
-}
-
-void aggregateVectorP(const Grid &grid, GlobalSystemOfEquation &globalSystemOfEquation) {
-    int size = grid.nodes_number;
-    Vector<double> globalVectorP(size, 0.0);
-
-    for (auto& element : grid.elements) {
-        Vector<double> local_P = element.P;
-        int node_ids[4];
-
-        for (int j = 0; j < 4; ++j) {
-            node_ids[j] = element.node_id[j];
-        }
-
-        for (int j = 0; j < 4; ++j) {
-                globalVectorP[node_ids[j] - 1] += local_P[j];
-        }
-    }
+    globalSystemOfEquation.globalMatrixC = globalMatrixC;
     globalSystemOfEquation.globalVectorP = globalVectorP;
 }

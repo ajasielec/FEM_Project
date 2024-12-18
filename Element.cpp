@@ -67,11 +67,15 @@ void Element::calculateShapeDerivatives(int npc){
 void Element::calculateMatrixH(Grid& grid) {
     double alpha = grid.globalData["Alfa"];
     double conductivity = grid.globalData["Conductivity"];
+    double c = grid.globalData["SpecificHeat"];
+    double ro = grid.globalData["Density"];
+
     int npc = grid.npc;
     double ambient_temp = grid.globalData["Tot"];
 
     ElemUniv elem_univ(npc);
     Matrix<double> H(npc, Vector<double>(4, 0.0));
+    Matrix<double> C(npc, Vector<double>(4, 0.0));
     Matrix<double> Hpc(npc, Vector<double>(4, 0.0));
     Vector<double> P(4, 0.0);
 
@@ -179,6 +183,53 @@ void Element::calculateMatrixH(Grid& grid) {
         }
     }
 
+    std::vector<Node> current_pc;
+    current_pc = pc[1]; // npc 4
+
+    // calculating C
+
+    // N tables
+    Matrix<double> N;
+    for (int i = 0; i < npc; i++) {
+        double ksi = current_pc[i].x;
+        double eta = current_pc[i].y;
+        double N1 = 0.25 * (1 - ksi) * (1 - eta);
+        double N2 = 0.25 * (1 + ksi) * (1 - eta);
+        double N3 = 0.25 * (1 + ksi) * (1 + eta);
+        double N4 = 0.25 * (1 - ksi) * (1 + eta);
+        Vector<double> row;
+        row.push_back(N1);
+        row.push_back(N2);
+        row.push_back(N3);
+        row.push_back(N4);
+        N.push_back(row);
+    }
+
+    // std::cout << "N TABLBE: " << std::endl;
+    // for (int i = 0; i < npc; i++) {
+    //     for (int j = 0; j < 4; j++) {
+    //         std::cout << N[i][j] << " ";
+    //     }
+    //     std::cout << std::endl;
+    // }
+
+    // c:
+
+    for (int i = 0; i < npc; i++) {
+        double detJ = jakobians[i].detJ / 2;
+        std::vector<double> dNdx = N[i];
+        std::vector<double> dNdy = N[i];
+
+        // calculating H matrix elements for the whole element
+        for (int j = 0; j < 4; j++) {
+            for (int k = 0; k < 4; k++) {
+                C[j][k] += c * ro * detJ * (dNdx[j] * dNdx[k] + dNdy[j] * dNdy[k]) * current_wages[i].x * current_wages[i].y;
+                std::cout << detJ << std::endl;
+            }
+        }
+    }
+
+    this->C = C;
     this->H = H;
     this->P = P;
 }
@@ -226,6 +277,16 @@ void Element::display_H() const {
     for (int i = 0; i < 4; ++i) {
         for (int j = 0; j < 4; ++j) {
             std::cout << H[i][j] << " ";
+        }
+        std::cout << "\n";
+    }
+}
+
+void Element::display_C() const {
+    std::cout << "\nElement " << id << ":\n";
+    for (int i = 0; i < 4; ++i) {
+        for (int j = 0; j < 4; ++j) {
+            std::cout << C[i][j] << " ";
         }
         std::cout << "\n";
     }

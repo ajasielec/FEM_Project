@@ -223,7 +223,7 @@ void Element::calculateMatrixH(Grid& grid) {
         for (int j = 0; j < 4; j++) {
             for (int k = 0; k < 4; k++) {
                 C[j][k] += c * ro * detJ * (dNdx[j] * dNdx[k] + dNdy[j] * dNdy[k]) * current_wages[i].x * current_wages[i].y;
-                std::cout << detJ << std::endl;
+                // std::cout << detJ << std::endl;
             }
         }
     }

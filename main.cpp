@@ -446,7 +446,7 @@ int main() {
 
 	for (auto& element : grid4x4.elements) {
 		//element.display_dN_dy();
-		element.display_C();
+		// element.display_C();
 	}
 
 	// agregation
@@ -454,7 +454,12 @@ int main() {
 	aggregate(grid4x4, SOE);
 	std::cout << "\nGLOBAL MATRIX C" << std::endl;
 	SOE.displayMatrixC();
+	std::cout << "\nGLOBAL VECTOR P" << std::endl;
 	SOE.displayVectorP();
+
+	for (auto& element : grid4x4.elements) {
+		element.display_P();
+	}
 
 	// rozwiazanie ukladu rownan
 

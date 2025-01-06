@@ -447,6 +447,7 @@ int main() {
 	for (auto& element : grid4x4.elements) {
 		//element.display_dN_dy();
 		// element.display_C();
+		// element.display_H();
 	}
 
 	// agregation
@@ -466,7 +467,7 @@ int main() {
 	// solving system of equation
 	SOE.solve(grid4x4);
 	std::cout << "\nGLOBAL VECTOR T" << std::endl;
-	SOE.displayVectorT();
+	// SOE.displayVectorT();
 
 	return 0;
 }

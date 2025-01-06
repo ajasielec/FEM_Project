@@ -7,36 +7,53 @@
 #define SMALL_NUMBER 0.0001
 
 void GlobalSystemOfEquation::solve(Grid grid) {
-    // calculating vector t0
-    vectorT = gaussElimination(globalMatrixH, globalVectorP);
-
     // getting global data
-    double t0 = grid.globalData["InitialTemp"];
+    double initTemp = grid.globalData["InitialTemp"];
     double delta_tau = grid.globalData["SimulationStepTime"];
+    double sim_time = grid.globalData["SimulationTime"];
 
     int n = grid.nodes_number;
     Matrix<double> left_C (n, Vector<double>(n, 0));
     Vector<double> right_P(n, 0.0);  // [C]/dtau * t0
+    Vector<double> t0 (n, initTemp);
 
-    for (int i = 0; i < 1; i++) {
-        std::cout << "C iteration " << i << ": " << std::endl;
+    std::cout << "TIME[s]:\tMIN TEMP:\tMAX TEMP:" << std::endl;
+    for (int i = delta_tau; i <= sim_time; i += delta_tau) {
         std::fill(right_P.begin(), right_P.end(), 0.0);
 
         for (int j = 0; j < n; j++) {
             for (int k = 0; k < n; k++) {
                 left_C[j][k] = (globalMatrixC[j][k] / delta_tau) + globalMatrixH[j][k];
-                right_P[j] += (globalMatrixC[j][k] / delta_tau) * t0;
-                std::cout << left_C[j][k] << " ";
+                right_P[j] += (globalMatrixC[j][k] / delta_tau) * t0[k];
+                //std::cout << left_C[j][k] << " ";
             }
             right_P[j] += globalVectorP[j];
-            std::cout << std::endl;
+            //std::cout << std::endl;
         }
-    }
 
-    // displaying new vector P
-    std::cout << "P iteration 0:" << std::endl;
-    for (int i = 0; i < n; i++) {
-        std::cout << right_P[i] << " ";
+        // solving SOE
+        t0 = gaussElimination(left_C, right_P);
+
+        // finding min and max temp
+        double minTemp = 10000;
+        double maxTemp = 0;
+        for (int i = 0; i < n; i++) {
+            if (t0[i] < minTemp) {
+                minTemp = t0[i];
+            }
+            if (t0[i] > maxTemp) {
+                maxTemp = t0[i];
+            }
+        }
+
+        // displaying new vector P
+        // std::cout << "P:" << std::endl;
+        // for (int i = 0; i < n; i++) {
+        //     std::cout << right_P[i] << " ";
+        // }
+
+        // displaying time and min/max temp
+        std::cout << i << "\t\t" << minTemp << "\t\t" << maxTemp << std::endl;
     }
 
 }

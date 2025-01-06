@@ -3,21 +3,8 @@ project(FEM_Project)
 
 set(CMAKE_CXX_STANDARD 20)
 
-add_executable(FEM_Project main.cpp
-        main.h
-        Quadrature.cpp
-        Quadrature.h
-        grid.cpp
-        grid.h
-        Node.cpp
-        Node.h
-        Element.cpp
-        Element.h
-        ElemUniv.cpp
-        ElemUniv.h
-        Jakobian.cpp
-        Jakobian.h
-        includes.h
-        GlobalSystemOfEquation.cpp
-        GlobalSystemOfEquation.h
-)
+include_directories(include)
+
+file(GLOB_RECURSE SOURCES "src/*.cpp")
+
+add_executable(FEM_Project ${SOURCES})

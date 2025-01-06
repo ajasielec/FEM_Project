@@ -25,10 +25,8 @@ void GlobalSystemOfEquation::solve(Grid grid) {
             for (int k = 0; k < n; k++) {
                 left_C[j][k] = (globalMatrixC[j][k] / delta_tau) + globalMatrixH[j][k];
                 right_P[j] += (globalMatrixC[j][k] / delta_tau) * t0[k];
-                //std::cout << left_C[j][k] << " ";
             }
             right_P[j] += globalVectorP[j];
-            //std::cout << std::endl;
         }
 
         // solving SOE

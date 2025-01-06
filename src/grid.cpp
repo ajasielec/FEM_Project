@@ -58,13 +58,15 @@ void Grid::calculateAllJakobians() {
         element.calculateJakobians(*this);
     }
 }
+
 // calculating shape derivatives of each element
 void Grid::calculateAllShapeDerivatives() {
     for (auto& element : elements) {
         element.calculateShapeDerivatives(npc);
     }
 }
-//calculating H matrix for each element
+
+// calculating H matrix for each element
 void Grid::calculateAllMatrixH() {
     for (auto& element : elements) {
         element.calculateMatrixH(*this);

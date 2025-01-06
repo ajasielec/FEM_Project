@@ -19,7 +19,6 @@ Element::Element(const int id, const int node_id[4]) : id(id) {
 
 // calculate jakobians of each npc
 void Element::calculateJakobians(Grid& grid) {
-
     // taking nodes of an element
     std::vector<Node> nodes (4);
     for (int i = 0; i < 4; i++) {
@@ -205,15 +204,6 @@ void Element::calculateMatrixH(Grid& grid) {
         N.push_back(row);
     }
 
-    // std::cout << "N TABLE: " << std::endl;
-    // for (int i = 0; i < npc; i++) {
-    //     for (int j = 0; j < 4; j++) {
-    //         std::cout << N[i][j] << " ";
-    //     }
-    //     std::cout << std::endl;
-    // }
-
-    // c:
     for (int i = 0; i < npc; i++) {
         double detJ = jakobians[i].detJ / 2;
         std::vector<double> dNdx = N[i];
@@ -223,7 +213,6 @@ void Element::calculateMatrixH(Grid& grid) {
         for (int j = 0; j < 4; j++) {
             for (int k = 0; k < 4; k++) {
                 C[j][k] += c * ro * detJ * (dNdx[j] * dNdx[k] + dNdy[j] * dNdy[k]) * current_wages[i].x * current_wages[i].y;
-                // std::cout << detJ << std::endl;
             }
         }
     }

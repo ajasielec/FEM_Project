@@ -14,7 +14,7 @@ public:
     Vector<double> globalVectorP;
     Vector<double> vectorT;
 
-    void solve();
+    void solve(Grid grid);
 
     void displayMatrixH();
     void displayMatrixC();

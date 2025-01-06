@@ -6,9 +6,39 @@
 #include "includes.h"
 #define SMALL_NUMBER 0.0001
 
-void GlobalSystemOfEquation::solve() {
-    // metoda gaussa
+void GlobalSystemOfEquation::solve(Grid grid) {
+    // calculating vector t0
     vectorT = gaussElimination(globalMatrixH, globalVectorP);
+
+    // getting global data
+    double t0 = grid.globalData["InitialTemp"];
+    double delta_tau = grid.globalData["SimulationStepTime"];
+
+    int n = grid.nodes_number;
+    Matrix<double> left_C (n, Vector<double>(n, 0));
+    Vector<double> right_P(n, 0.0);  // [C]/dtau * t0
+
+    for (int i = 0; i < 1; i++) {
+        std::cout << "C iteration " << i << ": " << std::endl;
+        std::fill(right_P.begin(), right_P.end(), 0.0);
+
+        for (int j = 0; j < n; j++) {
+            for (int k = 0; k < n; k++) {
+                left_C[j][k] = (globalMatrixC[j][k] / delta_tau) + globalMatrixH[j][k];
+                right_P[j] += (globalMatrixC[j][k] / delta_tau) * t0;
+                std::cout << left_C[j][k] << " ";
+            }
+            right_P[j] += globalVectorP[j];
+            std::cout << std::endl;
+        }
+    }
+
+    // displaying new vector P
+    std::cout << "P iteration 0:" << std::endl;
+    for (int i = 0; i < n; i++) {
+        std::cout << right_P[i] << " ";
+    }
+
 }
 
 void GlobalSystemOfEquation::displayMatrixH() {
@@ -84,50 +114,7 @@ Vector<double> gaussElimination(Matrix<double> H, Vector<double> P) {
     return t;
 }
 
-
-// void aggregateMatrixH(const Grid& grid, GlobalSystemOfEquation& globalSystemOfEquation) {
-//     int size = grid.nodes_number;
-//     Matrix<double> globalMatrixH (size, Vector<double>(size, 0));    //matrix size x size
-//
-//     for (int i = 0; i < grid.elements.size(); i++) {
-//         Matrix<double> localMatrixH = grid.elements[i].H;
-//
-//         int node_ids[4];
-//         for (int j = 0; j < 4; ++j) {
-//             node_ids[j] = grid.elements[i].node_id[j];
-//         }
-//
-//         for (int j = 0; j < 4; ++j) {
-//             for (int k = 0; k < 4; ++k) {
-//                 globalMatrixH[node_ids[j]-1][node_ids[k]-1] += localMatrixH[j][k];
-//             }
-//         }
-//     }
-//
-//     globalSystemOfEquation.globalMatrixH = globalMatrixH;
-// }
-//
-// void aggregateVectorP(const Grid &grid, GlobalSystemOfEquation &globalSystemOfEquation) {
-//     int size = grid.nodes_number;
-//     Vector<double> globalVectorP(size, 0.0);
-//
-//     for (auto& element : grid.elements) {
-//         Vector<double> local_P = element.P;
-//         int node_ids[4];
-//
-//         for (int j = 0; j < 4; ++j) {
-//             node_ids[j] = element.node_id[j];
-//         }
-//
-//         for (int j = 0; j < 4; ++j) {
-//                 globalVectorP[node_ids[j] - 1] += local_P[j];
-//         }
-//     }
-//     globalSystemOfEquation.globalVectorP = globalVectorP;
-// }
-
 void aggregate(const Grid &grid, GlobalSystemOfEquation &globalSystemOfEquation) {
-
     int size = grid.nodes_number;
     Matrix<double> globalMatrixH (size, Vector<double>(size, 0));    //matrix size x size
     Matrix<double> globalMatrixC (size, Vector<double>(size, 0));    //matrix size x size

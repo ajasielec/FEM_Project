@@ -456,14 +456,17 @@ int main() {
 	SOE.displayMatrixC();
 	std::cout << "\nGLOBAL VECTOR P" << std::endl;
 	SOE.displayVectorP();
+	std::cout << "\nGLOBAL MATRIX H" << std::endl;
+	SOE.displayMatrixH();
 
 	for (auto& element : grid4x4.elements) {
 		element.display_P();
 	}
 
-	// rozwiazanie ukladu rownan
-
-
+	// solving system of equation
+	SOE.solve(grid4x4);
+	std::cout << "\nGLOBAL VECTOR T" << std::endl;
+	SOE.displayVectorT();
 
 	return 0;
 }

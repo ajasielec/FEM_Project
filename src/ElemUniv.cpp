@@ -4,26 +4,24 @@
 
 #include "ElemUniv.h"
 
-
 // UNIVERSAL ELEMENT constructor, takes number of points, creates ksi and eta tables, completing surface struct
 ElemUniv::ElemUniv(int npc) {
     this->npc = npc;
 
     std::vector<Node> current_pc;
-    std::vector<Node> current_wages;
     std::vector<Node> current_N;
 
     if (npc == 1) {
         current_pc = pc[0];
-        current_wages = wages[0];
     }
     else if (npc == 4) {
         current_pc = pc[1];
-        current_wages = wages[1];
     }
     else if (npc == 9) {
         current_pc = pc[2];
-        current_wages = wages[2];
+    }
+    else if (npc == 16) {
+        current_pc = pc[3];
     }
 
     dN_dE.reserve(npc);
@@ -49,17 +47,23 @@ ElemUniv::ElemUniv(int npc) {
     }
 
     // completing surface array
-    if (npc == 1) {
-        surface[0].boundary_pc = downSide[0];
-        surface[1].boundary_pc = rightSide[0];
-        surface[2].boundary_pc = upSide[0];
-        surface[3].boundary_pc = leftSide[0];
-    }
-    else if (npc == 4) {
+    if (npc == 4) {
         surface[0].boundary_pc = downSide[1];
         surface[1].boundary_pc = rightSide[1];
         surface[2].boundary_pc = upSide[1];
         surface[3].boundary_pc = leftSide[1];
+    }
+    else if (npc == 9) {
+        surface[0].boundary_pc = downSide[2];
+        surface[1].boundary_pc = rightSide[2];
+        surface[2].boundary_pc = upSide[2];
+        surface[3].boundary_pc = leftSide[2];
+    }
+    else if (npc == 16) {
+        surface[0].boundary_pc = downSide[3];
+        surface[1].boundary_pc = rightSide[3];
+        surface[2].boundary_pc = upSide[3];
+        surface[3].boundary_pc = leftSide[3];
     }
 }
 

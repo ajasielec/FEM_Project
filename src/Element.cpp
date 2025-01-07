@@ -90,6 +90,9 @@ void Element::calculateMatrixH(Grid& grid) {
     else if (npc == 9) {
         current_wages = wages[2];
     }
+    else if (npc == 16) {
+        current_wages = wages[3];
+    }
 
     for (int i = 0; i < npc; i++) {
         std::vector<double> dNdx = dN_dx[i];
@@ -183,7 +186,9 @@ void Element::calculateMatrixH(Grid& grid) {
     }
 
     std::vector<Node> current_pc;
-    current_pc = pc[1]; // npc 4
+    if (grid.npc == 4) current_pc = pc[1];
+    else if (grid.npc == 9) current_pc = pc[2];
+    else if (grid.npc == 16) current_pc = pc[3];
 
     // calculating C
 

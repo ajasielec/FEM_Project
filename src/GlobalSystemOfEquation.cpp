@@ -17,7 +17,7 @@ void GlobalSystemOfEquation::solve(Grid grid) {
     Vector<double> right_P(n, 0.0);  // [C]/dtau * t0
     Vector<double> t0 (n, initTemp);
 
-    std::cout << "TIME[s]:\tMIN TEMP:\tMAX TEMP:" << std::endl;
+    std::cout << "TIME:\tMIN TEMP:\tMAX TEMP:" << std::endl;
     for (int i = delta_tau; i <= sim_time; i += delta_tau) {
         std::fill(right_P.begin(), right_P.end(), 0.0);
 
@@ -44,14 +44,9 @@ void GlobalSystemOfEquation::solve(Grid grid) {
             }
         }
 
-        // displaying new vector P
-        // std::cout << "P:" << std::endl;
-        // for (int i = 0; i < n; i++) {
-        //     std::cout << right_P[i] << " ";
-        // }
-
         // displaying time and min/max temp
-        std::cout << i << "\t\t" << minTemp << "\t\t" << maxTemp << std::endl;
+        std::cout << std::fixed << std::setprecision(7);
+        std::cout << i << "\t" << minTemp << "\t" << maxTemp << std::endl;
     }
 
 }

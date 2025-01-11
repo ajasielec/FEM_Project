@@ -78,20 +78,29 @@ void Element::calculateMatrixH(Grid& grid) {
     Matrix<double> Hpc(npc, Vector<double>(4, 0.0));
     Vector<double> P(4, 0.0);
 
-
     // assigning wages
     std::vector<Node> current_wages;
+    Vector<double> BC_wages;
     if (npc == 1) {
         current_wages = wages[0];
     }
     else if (npc == 4) {
         current_wages = wages[1];
+        BC_wages.push_back(1.0);
+        BC_wages.push_back(1.0);
     }
     else if (npc == 9) {
         current_wages = wages[2];
+        BC_wages.push_back(5.0/9.0);
+        BC_wages.push_back(8.0/9.0);
+        BC_wages.push_back(5.0/9.0);
     }
     else if (npc == 16) {
         current_wages = wages[3];
+        BC_wages.push_back(0.347855);
+        BC_wages.push_back(0.652145);
+        BC_wages.push_back(0.652145);
+        BC_wages.push_back(0.347855);
     }
 
     for (int i = 0; i < npc; i++) {
@@ -121,10 +130,6 @@ void Element::calculateMatrixH(Grid& grid) {
         }
     }
 
-    // calculating Hbc on each side
-    Matrix<double> Hbc(4, Vector<double>(4, 0.0));
-
-
     // down
     Node node1 = grid.findNodeById(this->node_id[0]);
     Node node2 = grid.findNodeById(this->node_id[1]);
@@ -133,9 +138,9 @@ void Element::calculateMatrixH(Grid& grid) {
         for (int i = 0; i < sqrt(npc); i++) {
             for (int j = 0; j < 4; j++) {
                 for (int k = 0; k < 4; k++) {
-                    H[j][k] += det_up * alpha * (elem_univ.surface[0].N[i][j] * elem_univ.surface[0].N[i][k]) * current_wages[0].x;
+                    H[j][k] += det_up * alpha * (elem_univ.surface[0].N[i][j] * elem_univ.surface[0].N[i][k]) * BC_wages[i];
                 }
-                P[j] +=  det_up * alpha * ambient_temp * elem_univ.surface[0].N[i][j] * current_wages[0].x;
+                P[j] +=  det_up * alpha * ambient_temp * elem_univ.surface[0].N[i][j] * BC_wages[i];
             }
         }
     }
@@ -148,9 +153,9 @@ void Element::calculateMatrixH(Grid& grid) {
         for (int i = 0; i < sqrt(npc); i++) {
             for (int j = 0; j < 4; j++) {
                 for (int k = 0; k < 4; k++) {
-                    H[j][k] += det_left * alpha * (elem_univ.surface[1].N[i][j] * elem_univ.surface[1].N[i][k]) * current_wages[1].x;
+                    H[j][k] += det_left * alpha * (elem_univ.surface[1].N[i][j] * elem_univ.surface[1].N[i][k]) * BC_wages[i];
                 }
-                P[j] += det_left * alpha * ambient_temp * elem_univ.surface[1].N[i][j] * current_wages[1].x;
+                P[j] += det_left * alpha * ambient_temp * elem_univ.surface[1].N[i][j] * BC_wages[i];
             }
         }
     }
@@ -163,9 +168,9 @@ void Element::calculateMatrixH(Grid& grid) {
         for (int i = 0; i < sqrt(npc); i++) {
             for (int j = 0; j < 4; j++) {
                 for (int k = 0; k < 4; k++) {
-                    H[j][k] += det_down * alpha * (elem_univ.surface[2].N[i][j] * elem_univ.surface[2].N[i][k]) * current_wages[2].x;
+                    H[j][k] += det_down * alpha * (elem_univ.surface[2].N[i][j] * elem_univ.surface[2].N[i][k]) * BC_wages[i];
                 }
-                P[j] += det_down * alpha * ambient_temp * elem_univ.surface[2].N[i][j] * current_wages[2].x;
+                P[j] += det_down * alpha * ambient_temp * elem_univ.surface[2].N[i][j] * BC_wages[i];
             }
         }
     }
@@ -178,9 +183,9 @@ void Element::calculateMatrixH(Grid& grid) {
         for (int i = 0; i < sqrt(npc); i++) {
             for (int j = 0; j < 4; j++) {
                 for (int k = 0; k < 4; k++) {
-                    H[j][k] += det_right * alpha * (elem_univ.surface[3].N[i][j] * elem_univ.surface[3].N[i][k]) * current_wages[3].x;
+                    H[j][k] += det_right * alpha * (elem_univ.surface[3].N[i][j] * elem_univ.surface[3].N[i][k]) * BC_wages[i];
                 }
-                P[j] += det_right * alpha * ambient_temp * elem_univ.surface[3].N[i][j] * current_wages[3].x;
+                P[j] += det_right * alpha * ambient_temp * elem_univ.surface[3].N[i][j] * BC_wages[i];
             }
         }
     }

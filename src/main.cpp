@@ -100,7 +100,6 @@ Grid readFromFile(const std::string& path) {
 }
 
 void calculateH(Grid &grid) {
-	grid.npc = 4;
 	grid.calculateAllJakobians();
 	grid.calculateAllShapeDerivatives();
 	grid.calculateAllMatrixH();
@@ -108,61 +107,45 @@ void calculateH(Grid &grid) {
 
 
 int main() {
-
-	// LAB 1 - READING GRID FROM FILE //
-	//---------------------------------------------------------------------//
-	// LAB 2 - GAUSS QUADRATURES METHOD
-	//---------------------------------------------------------------------//
-	// LAB 3 - JAKOBIAN / LAB 4, 5 - MATRIX H
-	//---------------------------------------------------------------------//
-	// LAB 6 - testing data from file
-	//---------------------------------------------------------------------//
-	// LAB7 - MATRIX H AGGREGATION
-	//---------------------------------------------------------------------//
-	// LAB 8 - BOUNDARY CONDITIONS
-	//---------------------------------------------------------------------//
-	// LAB 9 - CALCULATING AND AGREGATING VECTOP P
-	//---------------------------------------------------------------------//
-	// LAB 10 - calculating matrix C
-
-
-	// grid 4x4 test
-	std::cout << "GRID 4X4 TEST:" << std::endl;
+	//------------------- TEST 1: grid 4x4 ---------------------//
+	std::cout << "\nGRID 4X4 TEST:" << std::endl;
 	Grid grid4x4 = readFromFile("data\\Test1_4_4.txt");
-	grid4x4.npc = 4;
+	grid4x4.npc = 16;
 
 	calculateH(grid4x4);
 
 	GlobalSystemOfEquation SOE;
 	aggregate(grid4x4, SOE);
-	std::cout << "\nGLOBAL MATRIX C" << std::endl;
-	SOE.displayMatrixC();
-	std::cout << "\nGLOBAL VECTOR P" << std::endl;
-	SOE.displayVectorP();
-	std::cout << "\nGLOBAL MATRIX H" << std::endl;
-	SOE.displayMatrixH();
 
 	// solving system of equation
 	SOE.solve(grid4x4);
 
-	// mix grid 4x4 test
-	std::cout << "MIX GRID 4X4 TEST:" << std::endl;
+	//------------------- TEST 2: mix grid 4x4 ---------------------//
+	std::cout << "\nMIX GRID 4X4 TEST:" << std::endl;
 	Grid mix_grid = readFromFile("data\\Test2_4_4_MixGrid.txt");
-	mix_grid.npc = 4;
+	mix_grid.npc = 16;
 
 	calculateH(mix_grid);
 
 	GlobalSystemOfEquation SOE2;
 	aggregate(mix_grid, SOE2);
-	std::cout << "\nGLOBAL MATRIX C" << std::endl;
-	SOE2.displayMatrixC();
-	std::cout << "\nGLOBAL VECTOR P" << std::endl;
-	SOE2.displayVectorP();
-	std::cout << "\nGLOBAL MATRIX H" << std::endl;
-	SOE2.displayMatrixH();
 
 	// solving system of equation
 	SOE2.solve(mix_grid);
+
+	//------------------- TEST 3: grid 31x31 ---------------------//
+	std::cout << "\nGRID 31X31 TEST:" << std::endl;
+	Grid grid_31x31 = readFromFile("data\\Test3_31_31_kwadrat.txt");
+	grid_31x31.npc = 16;
+
+	calculateH(grid_31x31);
+
+	GlobalSystemOfEquation SOE3;
+	aggregate(grid_31x31, SOE3);
+
+	// solving system of equation
+	SOE3.solve(grid_31x31);
+
 
 	return 0;
 }

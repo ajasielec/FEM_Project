@@ -13,7 +13,7 @@ struct Grid {
     std::vector<Node> nodes;
     std::vector<Element> elements;
     std::map<std::string, int> globalData;
-    int npc; // wiersze w tabeli
+    int npc;
 
     void displayGlobalData() const;
     void displayNodes() const;

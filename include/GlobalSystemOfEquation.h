@@ -26,10 +26,6 @@ bool zeroOnDiagonal(Matrix<double> matrix);
 Vector <double> gaussElimination(Matrix<double> H, Vector<double> P);
 Matrix<double> scalMacierz(Matrix<double> a, Vector<double> b);
 
-// void aggregateMatrixH(const Grid&  grid, GlobalSystemOfEquation& globalSystemOfEquation);
-// void aggregateVectorP(const Grid&  grid, GlobalSystemOfEquation& globalSystemOfEquation);
 void aggregate(const Grid&  grid, GlobalSystemOfEquation& globalSystemOfEquation);
-
-
 
 #endif //GLOBALSYSTEMOFEQUATION_H

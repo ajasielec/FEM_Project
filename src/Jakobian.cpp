@@ -9,7 +9,6 @@ Jakobian::Jakobian() {
             detJ = 0;
         }
     }
-
 } // default, all values are 0
 
 // JAKOBIAN methods
